@@ -67,8 +67,8 @@ colours = [] # enumerate 4 gray levels
 for p in data[PIXELS]:
     if not p in colours:
         colours.append(p)
-#        if len(colours) == 4:
-#            break
+        if len(colours) == 4:
+            break
 
 # it's possible for the converted pixels to have less than 4 gray levels
 
