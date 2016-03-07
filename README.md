@@ -1,5 +1,5 @@
 # ePaperDisplay
-Scripts to display vector shapes, BMP images and texts on WaveShare 4.3 inch e-paper display module via command-line instead of the Windows-only tools provided by the manufacture.
+Scripts to display vector shapes, BMP images and texts on [WaveShare 4.3 inch e-paper display module](http://www.waveshare.com/wiki/4.3inch_e-Paper) via command-line instead of the Windows-only tools provided by the manufacture.
 
 `epd.py` is based on the Arduino/C++ library provided by the manufacture.
 
