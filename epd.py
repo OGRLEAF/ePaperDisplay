@@ -18,30 +18,32 @@ GRAY                = "02"
 WHITE               = "03"
 
 # commands
-CMD_HANDSHAKE       = "00"  #handshake
-CMD_SET_BAUD        = "01"  #set baud
-CMD_READ_BAUD       = "02"  #read baud
-CMD_MEMORYMODE      = "07"  #set memory mode
-CMD_STOPMODE        = "08"  #enter stop mode 
-CMD_UPDATE          = "0A"  #update
-CMD_SCREEN_ROTATION = "0D"  #set screen rotation
-CMD_LOAD_FONT       = "0E"  #load font library
-CMD_LOAD_PIC        = "0F"  #load picture library
+CMD_HANDSHAKE       = "00"  # handshake
+CMD_SET_BAUD        = "01"  # set baud
+CMD_READ_BAUD       = "02"  # read baud
+CMD_MEMORYMODE      = "07"  # set memory mode
+CMD_STOPMODE        = "08"  # enter stop mode 
+CMD_UPDATE          = "0A"  # update
+CMD_SCREEN_ROTATION = "0D"  # set screen rotation
+CMD_LOAD_FONT       = "0E"  # copy font files from SD card to NandFlash.
+                            # Font files include GBK32/48/64.FON
+                            # LED will flicker 3 times when starts and ends.
+CMD_LOAD_PIC        = "0F"  # Import the image files from SD card to the NandFlash.
+                            # LED will flicker 3 times when starts and ends.
+CMD_SET_COLOR       = "10"  # set colour
+CMD_SET_EN_FONT     = "1E"  # set English font
+CMD_SET_CH_FONT     = "1F"  # set Chinese font
 
-CMD_SET_COLOR       = "10"  #set colour
-CMD_SET_EN_FONT     = "1E"  #set english font
-CMD_SET_CH_FONT     = "1F"  #set chinese font
-
-CMD_DRAW_PIXEL      = "20"  #set pixel
-CMD_DRAW_LINE       = "22"  #draw line
-CMD_FILL_RECT       = "24"  #fill rectangle
-CMD_DRAW_CIRCLE     = "26"  #draw circle
-CMD_FILL_CIRCLE     = "27"  #fill circle
-CMD_DRAW_TRIANGLE   = "28"  #draw triangle
-CMD_FILL_TRIANGLE   = "29"  #fill triangle
-CMD_CLEAR           = "2E"  #clear screen use back colour
-CMD_DRAW_STRING     = "30"  #draw string
-CMD_DRAW_BITMAP     = "70"  #draw bitmap
+CMD_DRAW_PIXEL      = "20"  # set pixel
+CMD_DRAW_LINE       = "22"  # draw line
+CMD_FILL_RECT       = "24"  # fill rectangle
+CMD_DRAW_CIRCLE     = "26"  # draw circle
+CMD_FILL_CIRCLE     = "27"  # fill circle
+CMD_DRAW_TRIANGLE   = "28"  # draw triangle
+CMD_FILL_TRIANGLE   = "29"  # fill triangle
+CMD_CLEAR           = "2E"  # clear screen use back colour
+CMD_DRAW_STRING     = "30"  # draw string
+CMD_DRAW_BITMAP     = "70"  # draw bitmap
 
 
 # FONT SIZE (32/48/64 dots)
