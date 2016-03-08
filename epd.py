@@ -27,9 +27,11 @@ CMD_UPDATE          = "0A"  # update
 CMD_SCREEN_ROTATION = "0D"  # set screen rotation
 CMD_LOAD_FONT       = "0E"  # copy font files from SD card to NandFlash.
                             # Font files include GBK32/48/64.FON
+                            # 48MB allocated in NandFlash for fonts
                             # LED will flicker 3 times when starts and ends.
 CMD_LOAD_PIC        = "0F"  # Import the image files from SD card to the NandFlash.
                             # LED will flicker 3 times when starts and ends.
+                            # 80MB allocated in NandFlash for images
 CMD_SET_COLOR       = "10"  # set colour
 CMD_SET_EN_FONT     = "1E"  # set English font
 CMD_SET_CH_FONT     = "1F"  # set Chinese font
@@ -284,7 +286,7 @@ def epd_string(x0, y0, txt):
         print "> Too many characters. Max length =",MAX_STRING_LEN
 
 
-def epd_bitmap(x0, y0, name):
+def epd_bitmap(x0, y0, name): # file names must be all capitals and <10 letters including '.'
     hex_x0 = ("000"+hex(x0)[2:])[-4:]
     hex_y0 = ("000"+hex(y0)[2:])[-4:]
     hex_name = A2H(name)
