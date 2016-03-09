@@ -25,3 +25,15 @@ The manuafacture's manual isn't very clear about this. I consulted their technic
   * capital letters and digits followed by `.BMP` for images. Note that the totol length of file names must be no more than 10 chracters including `.BMP`.
 * If no valid font or image is found on SD card, the import functions will just clear the relavant internal storage.
 
+## Error Codes
+
+```
+0       Invalid command
+1       SD card initiation failed
+2       Invalid arguments
+3       SD card not inserted
+4       File not found
+20      Validation failed
+21      Invalid frame
+250     Undefined error
+```
