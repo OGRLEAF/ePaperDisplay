@@ -21,7 +21,7 @@ The manuafacture's manual isn't very clear about this. I consulted their technic
 * The 128MB internal storage is partitioned into 48MB for fonts and 80MB for images (according to the manual, unverified)
 * When calling the import functions (one for fonts and one for images), the relavant internal partition gets cleared and the fonts or images in the *root* directory of the SD card are copied over.
 * Valid fonts or images are determined by the file names:
-* * `GBK32.FON`,`GBK32.FON` and `GBK32.FON` for fonts
-* * capital letters and digits followed by `.BMP` for images. Note that the totol length of file names must be no more than 10 chracters including `.BMP`.
+  * `GBK32.FON`,`GBK32.FON` and `GBK32.FON` for fonts
+  * capital letters and digits followed by `.BMP` for images. Note that the totol length of file names must be no more than 10 chracters including `.BMP`.
 * If no valid font or image is found on SD card, the import functions will just clear the relavant internal storage.
 
