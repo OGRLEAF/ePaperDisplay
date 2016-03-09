@@ -332,3 +332,43 @@ def epd_bitmap(x0, y0, name): # file names must be all capitals and <10 letters 
     _cmd = FRAME_BEGIN+hex_size+CMD_DRAW_BITMAP+hex_x0+hex_y0+hex_name+FRAME_END
     send(_cmd)
 
+def help(): # list all available functions
+    print """\
+epd_connect()                           # open serial connection to EPD
+epd_handshake()                         # check if EPD is ready via serial connection
+epd_disconnect()                        # close serial connection to EPD
+epd_verbose(True|False)                 # enable/disable(default) verbose serial communication (SLOW!)
+epd_halt()                              # put EPD to sleep. to wake up pin by physical pin only
+
+epd_read_baud()                         # read EPD serial connection baud rate
+epd_set_baud(int)                       # set EPD serial baud rate & restart & reconnect
+
+epd_set_memory_nand()                   # use internal memory (default)
+epd_set_memory_sd()                     # use SD card
+
+epd_import_font()                       # copy font files form SD card to internal memory
+epd_import_pic()                        # copy images from SD card to internal memory
+
+epd_set_color(foreground,background)    # set colours from BLACK|DARK_GRAY|GRAY|WHITE
+epd_set_ch_font(GBK32|GBK48|GBK64)      # set Chinese font size
+epd_set_en_font(ASCII32|ASCII48|ASCII64)# set ASCII font size
+
+epd_screen_normal()                     # flip EPD screen back to normal
+epd_screen_invert()                     # flip EPD screen 180 degrees
+epd_clear()                             # clear display
+epd_update()                            # update screen with buffered commands
+
+epd_ascii(x,y,"ascii string")           # display string
+epd_chinese(x,y,"hex code of Chinese")  # display Chinese
+
+epd_pixel(x,y)                          # draw a pixel
+epd_line(x0,y0,x1,y1)                   # draw a line
+epd_rect(x0,y0,x1,y1)                   # draw a rectangle
+epd_fill_rect(x0,y0,x1,y1)              # draw a filled rectangle
+epd_circle(x,y,radius)                  # draw a circle
+epd_fill_circle(x,y,radius)             # draw a filled circle
+epd_triangle(x0,y0,x1,y1,x2,y2)         # draw a triangle
+epd_fill_triangle(x0,y0,x1,y1,x2,y2)    # draw a filled triangle
+
+epd_bitmap(x,y,"image file name")       # display image
+"""
