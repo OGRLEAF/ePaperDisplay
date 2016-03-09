@@ -9,14 +9,14 @@ Scripts to display vector shapes, BMP images and texts on [WaveShare 4.3 inch e-
 Execute `./convert_to_grayscale.sh <source_image>` to convert the source image to BMP format. 
 
 The outcome is a BMP image with the following attributes:
-* indexed colours - 00000000/55555500/AAAAAA00/FFFFFF00
-* 2bbp grayscale - i.e. 00/01/10/11, but
-* 4bpp little-endian per pixel - i.e. 0000/0100/1000/1100
+* indexed colours - `00 00 00 00`/`55 55 55 00`/`AA AA AA 00`/`FF FF FF 00`
+* 2bbp grayscale - i.e. `00`/`01`/`10`/`11`, but
+* 4bpp little-endian per pixel - i.e. `00 00`/`01 00`/`10 00`/`11 00`
 * each row of pixels is aligned to 4 bytes or 8 pixels
 
 ## Notes on File Management
 
-The manuafacture's manual isn't very clear about this. I consulted their technical support regarding how to remove the preloaded files, but the answer he gave some isn't the fact by my experiments. So here's my conclusion:
+The manufacture's manual isn't very clear about this. I consulted their technical support regarding how to remove the preloaded files, but the answer he gave some isn't the fact by my experiments. So here's my conclusion:
 
 * The 128MB internal storage is partitioned into 48MB for fonts and 80MB for images (according to the manual, unverified)
 * When calling the import functions (one for fonts and one for images), the relavant internal partition gets cleared and the fonts or images in the *root* directory of the SD card are copied over.
