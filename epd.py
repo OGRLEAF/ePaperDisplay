@@ -1,5 +1,19 @@
 import serial
 from time import sleep
+from platform import system as os
+
+VERBOSE = False
+
+MAC='/dev/cu.usbserial'
+LINUX='/dev/ttyUSB0'
+PORT = ''
+
+if os()=='Linux':
+    PORT = LINUX
+elif os()=='Darwin':
+    PORT = MAC
+else:
+    PORT = raw_input('Define serial port for EPD connection (e.g. /dev/ttyUSB0): ')
 
 ser                 = None
 BAUD_RATE           = 115200
@@ -39,6 +53,7 @@ CMD_SET_CH_FONT     = "1F"  # set Chinese font
 CMD_DRAW_PIXEL      = "20"  # set pixel
 CMD_DRAW_LINE       = "22"  # draw line
 CMD_FILL_RECT       = "24"  # fill rectangle
+CMD_DRAW_RECT       = "25"  # draw rectangle
 CMD_DRAW_CIRCLE     = "26"  # draw circle
 CMD_FILL_CIRCLE     = "27"  # fill circle
 CMD_DRAW_TRIANGLE   = "28"  # draw triangle
@@ -92,7 +107,7 @@ def A2H(string):
 def H2B(hexStr):
     bytes = []
     parity = 0x00
-    hexStr = ''.join(hexStr.split(" "))
+    hexStr = hexStr.replace(" ",'')
     for i in range(0, len(hexStr), 2):
         byte = int(hexStr[i:i+2],16)
         bytes.append(chr(byte))
@@ -103,17 +118,14 @@ def H2B(hexStr):
 
 def send(cmd):
     ser.write(H2B(cmd))
-    print ">",ser.readline()
-
-
-def quick_send(cmd): # no waiting on reply
-    ser.write(H2B(cmd))
+    if VERBOSE:
+        print ">",ser.readline()
 
 
 def epd_connect():
     global ser
     ser = serial.Serial(
-        port='/dev/tty.usbserial',
+        port=PORT,
         baudrate=BAUD_RATE,
         timeout=1
     )
@@ -121,8 +133,16 @@ def epd_connect():
     epd_handshake()
 
 
+def epd_verbose(v):
+    global VERBOSE
+    if v:
+        VERBOSE = True
+    else:
+        VERBOSE = False
+
+
 def epd_handshake():
-    print "> EPD handshake..."
+    print "> EPD handshake"
     send(_cmd_handshake)
 
 
@@ -171,7 +191,7 @@ def epd_set_memory_sd():
 
 
 def epd_halt():
-    print "> EPD halt..."
+    print "> EPD halt"
     send(_cmd_stopmode)
 
 
@@ -214,8 +234,7 @@ def epd_pixel(x0, y0): # int,int
     hex_x0 = ("000"+hex(x0)[2:])[-4:]
     hex_y0 = ("000"+hex(y0)[2:])[-4:]
     _cmd = FRAME_BEGIN+"000D"+CMD_DRAW_PIXEL+hex_x0+hex_y0+FRAME_END
-    quick_send(_cmd)
-    # send(_cmd)
+    send(_cmd)
 
 
 def epd_line(x0, y0, x1, y1): # int,int,int,int
@@ -224,6 +243,15 @@ def epd_line(x0, y0, x1, y1): # int,int,int,int
     hex_x1 = ("000"+hex(x1)[2:])[-4:]
     hex_y1 = ("000"+hex(y1)[2:])[-4:]
     _cmd = FRAME_BEGIN+"0011"+CMD_DRAW_LINE+hex_x0+hex_y0+hex_x1+hex_y1+FRAME_END
+    send(_cmd)
+
+
+def epd_rect(x0, y0, x1, y1): # int,int,int,int
+    hex_x0 = ("000"+hex(x0)[2:])[-4:]
+    hex_y0 = ("000"+hex(y0)[2:])[-4:]
+    hex_x1 = ("000"+hex(x1)[2:])[-4:]
+    hex_y1 = ("000"+hex(y1)[2:])[-4:]
+    _cmd = FRAME_BEGIN+"0011"+CMD_DRAW_RECT+hex_x0+hex_y0+hex_x1+hex_y1+FRAME_END
     send(_cmd)
 
 
@@ -274,24 +302,33 @@ def epd_fill_triangle(x0, y0, x1, y1, x2, y2):
     send(_cmd)
 
 
-def epd_string(x0, y0, txt):
+def epd_ascii(x0, y0, txt):
     if len(txt) <= MAX_STRING_LEN:
         hex_x0 = ("000"+hex(x0)[2:])[-4:]
         hex_y0 = ("000"+hex(y0)[2:])[-4:]
         hex_txt = A2H(txt)
-        hex_size = ("000"+hex(13+len(hex_txt)/2)[-2:])[-4:]
+        hex_size = ("000"+hex(13+len(hex_txt)/2)[2:])[-4:]
         _cmd = FRAME_BEGIN+hex_size+CMD_DRAW_STRING+hex_x0+hex_y0+hex_txt+FRAME_END
         send(_cmd)
     else:
         print "> Too many characters. Max length =",MAX_STRING_LEN
 
+def epd_chinese(x0, y0, gb2312_hex): # "hello world" in Chinese: C4E3 BAC3 CAC0 BDE7
+    gb2312_hex = gb2312_hex.replace(" ","")+"00"
+    if len(gb2312_hex)/2 <= MAX_STRING_LEN:
+        hex_x0 = ("000"+hex(x0)[2:])[-4:]
+        hex_y0 = ("000"+hex(y0)[2:])[-4:]
+        hex_size = ("000"+hex(13+len(gb2312_hex)/2)[2:])[-4:]
+        _cmd = FRAME_BEGIN+hex_size+CMD_DRAW_STRING+hex_x0+hex_y0+gb2312_hex+FRAME_END
+        send(_cmd)
+    else:
+        print "> Too many characters. Max length =",MAX_STRING_LEN
 
 def epd_bitmap(x0, y0, name): # file names must be all capitals and <10 letters including '.'
     hex_x0 = ("000"+hex(x0)[2:])[-4:]
     hex_y0 = ("000"+hex(y0)[2:])[-4:]
     hex_name = A2H(name)
-    hex_size = ("000"+hex(13+len(hex_name)/2)[-2:])[-4:]
+    hex_size = ("000"+hex(13+len(hex_name)/2)[2:])[-4:]
     _cmd = FRAME_BEGIN+hex_size+CMD_DRAW_BITMAP+hex_x0+hex_y0+hex_name+FRAME_END
     send(_cmd)
-    epd_update()
 
