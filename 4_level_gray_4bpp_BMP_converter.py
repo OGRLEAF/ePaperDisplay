@@ -60,7 +60,7 @@ height = int(data[DIMENTIONS].strip().split(' ')[1])
 
 
 if not width*height == len(data[PIXELS]):
-    print "Error: pixel data (%s bytes) and image size (%dx%d pixels) do not match" % (len(data[PIXELS]),width,height)
+    sys.stderr.write("Error: pixel data (%s bytes) and image size (%dx%d pixels) do not match" % (len(data[PIXELS]),width,height))
     sys.exit()
 
 colours = [] # enumerate 4 gray levels
