@@ -54,13 +54,10 @@ WHITE     = "3"
 # ['P5\n', '610 590\n', '255\n', '<1 byte per pixel for 4 levels of gray>']
 # where item 1 is always P5, item 2 is width heigh, item 3 is always 255, items 4 is pixels/colours
 data = sys.stdin.readlines()
-
-width = int(data[DIMENTIONS].strip().split(' ')[0])
-height = int(data[DIMENTIONS].strip().split(' ')[1])
-
+width,height = [int(x) for x in data[DIMENTIONS].strip().split(' ')]
 
 if not width*height == len(data[PIXELS]):
-    sys.stderr.write("Error: pixel data (%s bytes) and image size (%dx%d pixels) do not match" % (len(data[PIXELS]),width,height))
+    sys.stderr.write("Error: pixel data (%d bytes) and image size (%dx%d pixels) do not match" % (len(data[PIXELS]),width,height))
     sys.exit()
 
 colours = [] # enumerate 4 gray levels
@@ -72,13 +69,13 @@ for p in data[PIXELS]:
 
 # it's possible for the converted pixels to have less than 4 gray levels
 
-colours = sorted(colours) # sort from low to high
+colours.sort() # sort from low to high
 
 # map each colour to e-paper gray indexes
 # creates hex string of pixels
 # e.g. "0033322222110200....", which is 4 level gray with 4bpp
 
-if len(colours) == 1: # unlikely, but let's have this case here
+if   len(colours) == 1: # unlikely, but let's have this case here
     pixels = data[PIXELS].replace(colours[0],BLACK)
 elif len(colours) == 2: # black & white
     pixels = data[PIXELS].replace(colours[0],BLACK)\
