@@ -14,6 +14,18 @@ The outcome is a BMP image with the following attributes:
 * 4bpp little-endian per pixel - i.e. `00 00`/`01 00`/`10 00`/`11 00`
 * each row of pixels is aligned to 4 bytes or 8 pixels
 
+## Interact With the e-Paper Display
+
+```Python
+>>> from epd import *
+>>> help()              # prints help message which details all available functions
+...
+>>> epd_connect()       # must initiated serial connection first, and then send commands to EPD
+> EPD connected
+> EPD handshake
+>>> epd_disconnect()    # a clean finish after use
+```
+
 ## Notes on File Management
 
 The manufacture's manual isn't very clear about this. I consulted their technical support regarding how to remove the preloaded files, but the answer he gave some isn't the fact by my experiments. So here's my conclusion:
