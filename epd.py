@@ -230,14 +230,14 @@ def epd_set_ch_font(ch_size):
     send(_cmd)
 
 
-def epd_pixel(x0, y0): # int,int
+def epd_pixel(x0, y0):
     hex_x0 = ("000"+hex(x0)[2:])[-4:]
     hex_y0 = ("000"+hex(y0)[2:])[-4:]
     _cmd = FRAME_BEGIN+"000D"+CMD_DRAW_PIXEL+hex_x0+hex_y0+FRAME_END
     send(_cmd)
 
 
-def epd_line(x0, y0, x1, y1): # int,int,int,int
+def epd_line(x0, y0, x1, y1):
     hex_x0 = ("000"+hex(x0)[2:])[-4:]
     hex_y0 = ("000"+hex(y0)[2:])[-4:]
     hex_x1 = ("000"+hex(x1)[2:])[-4:]
@@ -246,7 +246,7 @@ def epd_line(x0, y0, x1, y1): # int,int,int,int
     send(_cmd)
 
 
-def epd_rect(x0, y0, x1, y1): # int,int,int,int
+def epd_rect(x0, y0, x1, y1):
     hex_x0 = ("000"+hex(x0)[2:])[-4:]
     hex_y0 = ("000"+hex(y0)[2:])[-4:]
     hex_x1 = ("000"+hex(x1)[2:])[-4:]
@@ -255,7 +255,7 @@ def epd_rect(x0, y0, x1, y1): # int,int,int,int
     send(_cmd)
 
 
-def epd_fill_rect(x0, y0, x1, y1): # int,int,int,int
+def epd_fill_rect(x0, y0, x1, y1):
     hex_x0 = ("000"+hex(x0)[2:])[-4:]
     hex_y0 = ("000"+hex(y0)[2:])[-4:]
     hex_x1 = ("000"+hex(x1)[2:])[-4:]
@@ -264,7 +264,7 @@ def epd_fill_rect(x0, y0, x1, y1): # int,int,int,int
     send(_cmd)
 
 
-def epd_circle(x0, y0, r): # int,int,int
+def epd_circle(x0, y0, r):
     hex_x0 = ("000"+hex(x0)[2:])[-4:]
     hex_y0 = ("000"+hex(y0)[2:])[-4:]
     hex_r = ("000"+hex(r)[2:])[-4:]
@@ -332,6 +332,87 @@ def epd_bitmap(x0, y0, name): # file names must be all capitals and <10 letters 
     _cmd = FRAME_BEGIN+hex_size+CMD_DRAW_BITMAP+hex_x0+hex_y0+hex_name+FRAME_END
     send(_cmd)
 
+def get_width(txt,size=32): # size in [32,48,64]
+    if not size in [32, 48, 64]:
+        print "> Error: size must be in [32,48,64]"
+        return
+    width = 0
+    for c in txt:
+        if c in "'":
+            width += 5
+        elif c in "ijl|":
+            width += 6
+        elif c in "f":
+            width += 7
+        elif c in " It![].,;:/\\":
+            width += 8
+        elif c in "r-`(){}":
+            width += 9
+        elif c in '"':
+            width += 10
+        elif c in "*":
+            width += 11
+        elif c in "x^":
+            width += 12
+        elif c in "Jvz":
+            width += 13
+        elif c in "cksy":
+            width += 14
+        elif c in "Labdeghnopqu$#?_":
+            width += 15
+        elif c in "T+<>=~":
+            width += 16
+        elif c in "FPVXZ":
+            width += 17
+        elif c in "ABEKSY&":
+            width += 18
+        elif c in "HNUw":
+            width += 19
+        elif c in "CDR":
+            width += 20
+        elif c in "GOQ":
+            width += 21
+        elif c in "m":
+            width += 22
+        elif c in "M":
+            width += 23
+        elif c in "%":
+            width += 24
+        elif c in "@":
+            width += 27
+        elif c in "W":
+            width += 28
+        else: # non-ascii or Chinese character
+            width += 32
+    return int(width * (size/32.0))
+
+def wrap_paragraph_ascii(x,y,txt,limit=800,size=32): # does not work well with size 48 or 64
+    DELIMITER = " "
+    DELIMITER_WIDTH = get_width(DELIMITER,size)
+    WHITE_WIDTH = get_width(" ",size)
+    words = txt.strip().split(DELIMITER)
+    line = ""
+    line_width = 0
+    y_offset = 0
+    for word in words:
+        word_width = get_width(word,size)
+        if line_width+DELIMITER_WIDTH+word_width <= limit:
+            line += DELIMITER + word
+            line_width += DELIMITER_WIDTH + word_width
+        else:
+            # clear line up to the whole line width
+            epd_ascii(x,y+y_offset," "*int(limit/WHITE_WIDTH))
+            epd_ascii(x,y+y_offset,line.strip(DELIMITER))
+            line = word
+            line_width = word_width
+            y_offset += size
+    if line != "":
+        # clear line up to the whole line width
+        epd_ascii(x,y+y_offset," "*int(limit/WHITE_WIDTH))
+        epd_ascii(x,y+y_offset,line.strip(DELIMITER))
+    epd_update()
+
+
 def help(): # list all available functions
     print """\
 epd_connect()                           # open serial connection to EPD
@@ -358,8 +439,13 @@ epd_screen_invert()                     # flip EPD screen 180 degrees
 epd_clear()                             # clear display
 epd_update()                            # update screen with buffered commands
 
-epd_ascii(x,y,"ascii string")           # display string
-epd_chinese(x,y,"hex code of Chinese")  # display Chinese
+epd_ascii(x,y,"ascii string")           # display ascii string
+epd_chinese(x,y,"hex code of Chinese")  # display Chinese string
+
+wrap_paragraph_ascii(x,y,txt,limit=800,size=32)
+                                        # auto-wraps a paragraph of ascii texts and displays
+                                        # from origin x,y with optional width limit and font
+                                        # size
 
 epd_pixel(x,y)                          # draw a pixel
 epd_line(x0,y0,x1,y1)                   # draw a line
