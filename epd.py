@@ -313,6 +313,7 @@ def epd_ascii(x0, y0, txt):
     else:
         print "> Too many characters. Max length =",MAX_STRING_LEN
 
+
 def epd_chinese(x0, y0, gb2312_hex): # "hello world" in Chinese: C4E3 BAC3 CAC0 BDE7
     gb2312_hex = gb2312_hex.replace(" ","")+"00"
     if len(gb2312_hex)/2 <= MAX_STRING_LEN:
@@ -324,6 +325,7 @@ def epd_chinese(x0, y0, gb2312_hex): # "hello world" in Chinese: C4E3 BAC3 CAC0 
     else:
         print "> Too many characters. Max length =",MAX_STRING_LEN
 
+
 def epd_bitmap(x0, y0, name): # file names must be all capitals and <10 letters including '.'
     hex_x0 = ("000"+hex(x0)[2:])[-4:]
     hex_y0 = ("000"+hex(y0)[2:])[-4:]
@@ -332,7 +334,11 @@ def epd_bitmap(x0, y0, name): # file names must be all capitals and <10 letters 
     _cmd = FRAME_BEGIN+hex_size+CMD_DRAW_BITMAP+hex_x0+hex_y0+hex_name+FRAME_END
     send(_cmd)
 
+
 def get_width(txt,size=32): # size in [32,48,64]
+                            # characters in size 32 are manually measured so their
+                            # widths are accurate. font size 48 and 64 are assumed
+                            # widths based on simple calculation for rough estimates.
     if not size in [32, 48, 64]:
         print "> Error: size must be in [32,48,64]"
         return
@@ -385,6 +391,7 @@ def get_width(txt,size=32): # size in [32,48,64]
         else: # non-ascii or Chinese character
             width += 32
     return int(width * (size/32.0))
+
 
 def wrap_paragraph_ascii(x,y,txt,limit=800,size=32): # does not work well with size 48 or 64
     DELIMITER = " "
