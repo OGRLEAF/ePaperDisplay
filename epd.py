@@ -393,7 +393,7 @@ def get_width(txt,size=32): # size in [32,48,64]
     return int(width * (size/32.0))
 
 
-def wrap_paragraph_ascii(x,y,txt,limit=800,size=32): # does not work well with size 48 or 64
+def wrap_ascii(x,y,txt,limit=800,size=32): # does not work well with size 48 or 64
     DELIMITER = " "
     DELIMITER_WIDTH = get_width(DELIMITER,size)
     WHITE_WIDTH = get_width(" ",size)
@@ -408,14 +408,18 @@ def wrap_paragraph_ascii(x,y,txt,limit=800,size=32): # does not work well with s
             line_width += DELIMITER_WIDTH + word_width
         else:
             # clear line up to the whole line width
-            epd_ascii(x,y+y_offset," "*int(limit/WHITE_WIDTH))
+            epd_set_color(WHITE,WHITE)
+            epd_fill_rect(x,y+y_offset,x+limit,y+y_offset+size)
+            epd_set_color(BLACK,WHITE)
             epd_ascii(x,y+y_offset,line.strip(DELIMITER))
             line = word
             line_width = word_width
             y_offset += size
     if line != "":
         # clear line up to the whole line width
-        epd_ascii(x,y+y_offset," "*int(limit/WHITE_WIDTH))
+        epd_set_color(WHITE,WHITE)
+        epd_fill_rect(x,y+y_offset,x+limit,y+y_offset+size)
+        epd_set_color(BLACK,WHITE)
         epd_ascii(x,y+y_offset,line.strip(DELIMITER))
     epd_update()
 
@@ -438,6 +442,7 @@ epd_import_font()                       # copy font files form SD card to intern
 epd_import_pic()                        # copy images from SD card to internal memory
 
 epd_set_color(foreground,background)    # set colours from BLACK|DARK_GRAY|GRAY|WHITE
+
 epd_set_ch_font(GBK32|GBK48|GBK64)      # set Chinese font size
 epd_set_en_font(ASCII32|ASCII48|ASCII64)# set ASCII font size
 
@@ -449,10 +454,8 @@ epd_update()                            # update screen with buffered commands
 epd_ascii(x,y,"ascii string")           # display ascii string
 epd_chinese(x,y,"hex code of Chinese")  # display Chinese string
 
-wrap_paragraph_ascii(x,y,txt,limit=800,size=32)
-                                        # auto-wraps a paragraph of ascii texts and displays
-                                        # from origin x,y with optional width limit and font
-                                        # size
+wrap_ascii(x,y,txt,limit=800,size=32)   # auto-wraps a paragraph of ascii texts and displays
+                                        # from origin x,y with optional width limit and font size
 
 epd_pixel(x,y)                          # draw a pixel
 epd_line(x0,y0,x1,y1)                   # draw a line
