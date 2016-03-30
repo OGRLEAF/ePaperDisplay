@@ -26,6 +26,12 @@ The outcome is a BMP image with the following attributes:
 >>> epd_disconnect()    # a clean finish after use
 ```
 
+## TCP/IP Support
+
+The original e-paper display does not have TCP/IP support. I added an ESP8266 module to it as a TCP-serial relay and it works pretty well. `epd_connect()` will try TCP connection first, else falls back to serial port. All function calls are the same for TCP/IP or serial connection, except I have not implemented read-reply via TCP/IP. i.e. no VERBOSE mode for TCP/IP connection.
+
+The baud rate should not be changed while connected via TCP/IP, as the WiFi module defaults to 115200 bps which does not change with the e-paper display.
+
 ## Notes on File Management
 
 The manufacture's manual isn't very clear about this. I consulted their technical support regarding how to remove the preloaded files, but the answer he gave some isn't the fact by my experiments. So here's my conclusion:
