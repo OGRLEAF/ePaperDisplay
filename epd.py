@@ -4,8 +4,8 @@ from time import sleep
 from platform import system as os
 
 VERBOSE = False
-LAN = "192.168.0.22" # when epd connected to home router with static IP
-AP = "192.168.1.1" # when computer connects to epd's wifi AP
+LAN = "192.168.0.22" # EPD's home IP
+AP = "192.168.1.1"   # EPD's own AP IP
 PORT = 3333
 MAC = "/dev/cu.usbserial"
 LINUX = "/dev/ttyUSB0"
@@ -128,23 +128,30 @@ def send(cmd):
             print ">",soc.readline()
 
 
-def epd_connect(target=DEV):
+def epd_connect():
     global soc
-    if target.startswith("/dev"): # USB serial connection
+    try:
         soc = serial.Serial(
             port=DEV,
             baudrate=BAUD_RATE,
             timeout=1
         )
         print "> EPD connected via serial port"
-    elif target.startswith("192"): # TCP/IP connection
-        soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        soc.settimeout(2)
+        return
+    except:
+        print ">> Failed to connect to USB serial port"
+
+    soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    soc.settimeout(1)
+    for ip in [LAN, AP]:
         try:
-            soc.connect((target, PORT))
-            print "> EPD connected via WiFi (%s:%s)" % (target, PORT)
+            soc.connect((LAN, PORT))
+            print "> EPD connected at %s:%s" % (ip, PORT)
+            break
         except:
-            print "> Failed to connect to %s:%s" % (target, PORT)
+            print ">> Failed to connect to %s:%s" % (ip, PORT)
+    else:
+        print ">> Unable to connect to EPD."
 
 
 def epd_verbose(v):
@@ -439,7 +446,6 @@ def wrap_ascii(x,y,txt,limit=800,size=32): # does not work well with size 48 or 
             epd_set_color(BLACK,WHITE)
             epd_ascii(x,y+y_offset,line.strip(DELIMITER))
             y_offset += size
-    epd_update()
 
 
 def help(): # list all available functions
