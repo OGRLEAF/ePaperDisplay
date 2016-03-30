@@ -1,21 +1,23 @@
 import serial
+import socket
 from time import sleep
 from platform import system as os
 
 VERBOSE = False
-
-MAC='/dev/cu.usbserial'
-LINUX='/dev/ttyUSB0'
-PORT = ''
+IP = "192.168.0.22"
+PORT = 3333
+MAC = "/dev/cu.usbserial"
+LINUX = "/dev/ttyUSB0"
+DEV = ""
 
 if os()=='Linux':
-    PORT = LINUX
+    DEV = LINUX
 elif os()=='Darwin':
-    PORT = MAC
+    DEV = MAC
 else:
-    PORT = raw_input('Define serial port for EPD connection (e.g. /dev/ttyUSB0): ')
+    DEV = raw_input('Define serial port for EPD connection (e.g. /dev/ttyUSB0): ')
 
-ser                 = None
+soc                 = None
 BAUD_RATE           = 115200
 BAUD_RATE_DEFAULT   = 115200
 BAUD_RATES          = [1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200]
@@ -117,20 +119,27 @@ def H2B(hexStr):
 
 
 def send(cmd):
-    ser.write(H2B(cmd))
-    if VERBOSE:
-        print ">",ser.readline()
+    if type(soc) == socket._socketobject:
+        soc.send(H2B(cmd))
+    else:
+        soc.write(H2B(cmd))
+        if VERBOSE:
+            print ">",soc.readline()
 
 
 def epd_connect():
-    global ser
-    ser = serial.Serial(
-        port=PORT,
-        baudrate=BAUD_RATE,
-        timeout=1
-    )
-    print "> EPD connected"
-    epd_handshake()
+    global soc
+    try:
+        soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        soc.connect((IP, PORT))
+        print "> EPD connected via WiFi"
+    except:
+        soc = serial.Serial(
+            port=DEV,
+            baudrate=BAUD_RATE,
+            timeout=1
+        )
+        print "> EPD connected via serial port"
 
 
 def epd_verbose(v):
@@ -147,8 +156,8 @@ def epd_handshake():
 
 
 def epd_disconnect():
-    global ser
-    ser.close()
+    global soc
+    soc.close()
     print "> EPD connection closed."
 
 
@@ -163,6 +172,7 @@ def epd_clear():
 
 def reset_baud_rate():
     BAUD_RATE = BAUD_RATE_DEFAULT
+
 
 def epd_set_baud(baud_rate): # 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200
     global BAUD_RATE
