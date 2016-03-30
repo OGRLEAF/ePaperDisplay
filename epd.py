@@ -4,7 +4,8 @@ from time import sleep
 from platform import system as os
 
 VERBOSE = False
-IP = "192.168.0.22"
+LAN = "192.168.0.22" # when epd connected to home router with static IP
+AP = "192.168.1.1" # when computer connects to epd's wifi AP
 PORT = 3333
 MAC = "/dev/cu.usbserial"
 LINUX = "/dev/ttyUSB0"
@@ -127,19 +128,23 @@ def send(cmd):
             print ">",soc.readline()
 
 
-def epd_connect():
+def epd_connect(target=DEV):
     global soc
-    try:
-        soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        soc.connect((IP, PORT))
-        print "> EPD connected via WiFi"
-    except:
+    if target.startswith("/dev"): # USB serial connection
         soc = serial.Serial(
             port=DEV,
             baudrate=BAUD_RATE,
             timeout=1
         )
         print "> EPD connected via serial port"
+    elif target.startswith("192"): # TCP/IP connection
+        soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        soc.settimeout(2)
+        try:
+            soc.connect((target, PORT))
+            print "> EPD connected via WiFi (%s:%s)" % (target, PORT)
+        except:
+            print "> Failed to connect to %s:%s" % (target, PORT)
 
 
 def epd_verbose(v):
@@ -374,7 +379,7 @@ def get_width(txt,size=32): # size in [32,48,64]
             width += 13
         elif c in "cksy":
             width += 14
-        elif c in "Labdeghnopqu$#?_":
+        elif c in "Labdeghnopqu$#?_1234567890":
             width += 15
         elif c in "T+<>=~":
             width += 16
@@ -407,30 +412,33 @@ def wrap_ascii(x,y,txt,limit=800,size=32): # does not work well with size 48 or 
     DELIMITER = " "
     DELIMITER_WIDTH = get_width(DELIMITER,size)
     WHITE_WIDTH = get_width(" ",size)
-    words = txt.strip().split(DELIMITER)
-    line = ""
-    line_width = 0
+    lines = txt.strip().split("\n")
     y_offset = 0
-    for word in words:
-        word_width = get_width(word,size)
-        if line_width+DELIMITER_WIDTH+word_width <= limit:
-            line += DELIMITER + word
-            line_width += DELIMITER_WIDTH + word_width
-        else:
+    for l in lines:
+        words = l.strip().split(DELIMITER)
+        line = ""
+        line_width = 0
+        for word in words:
+            word_width = get_width(word,size)
+            if line_width+DELIMITER_WIDTH+word_width <= limit:
+                line += DELIMITER + word
+                line_width += DELIMITER_WIDTH + word_width
+            else:
+                # clear line up to the whole line width
+                epd_set_color(WHITE,WHITE)
+                epd_fill_rect(x,y+y_offset,x+limit,y+y_offset+size)
+                epd_set_color(BLACK,WHITE)
+                epd_ascii(x,y+y_offset,line.strip(DELIMITER))
+                y_offset += size
+                line = word
+                line_width = word_width
+        if line != "":
             # clear line up to the whole line width
             epd_set_color(WHITE,WHITE)
             epd_fill_rect(x,y+y_offset,x+limit,y+y_offset+size)
             epd_set_color(BLACK,WHITE)
             epd_ascii(x,y+y_offset,line.strip(DELIMITER))
-            line = word
-            line_width = word_width
             y_offset += size
-    if line != "":
-        # clear line up to the whole line width
-        epd_set_color(WHITE,WHITE)
-        epd_fill_rect(x,y+y_offset,x+limit,y+y_offset+size)
-        epd_set_color(BLACK,WHITE)
-        epd_ascii(x,y+y_offset,line.strip(DELIMITER))
     epd_update()
 
 
