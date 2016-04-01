@@ -72,6 +72,18 @@ def chinese():
         epd_chinese(x-1, 250, "CAC0 BDE7")
     epd_update()
 
+# display blocks of long texts
+def english_block():
+    txt = "The quick brown fox jumps over the lazy dog. "
+    wrap_ascii(0,0,txt*6)
+    epd_update()
+    sleep(0.5)
+    wrap_ascii(50,250,txt*6,limit=400)
+    epd_update()
+    sleep(0.5)
+    wrap_ascii(350,150,txt*6,limit=350)
+    epd_update()
+
 
 if __name__=="__main__":
     try:
@@ -105,9 +117,16 @@ if __name__=="__main__":
     sleep(0.5)
     pixels()
     sleep(0.5)
+    epd_set_en_font(ASCII32)
     english()
     sleep(0.5)
     chinese()
     sleep(0.5)
+    english_block()
+    sleep(0.5)
+    epd_bitmap(100,0,"FACE.BMP")
+    epd_set_en_font(ASCII48)
+    epd_ascii(0,540,"http://github.com/yy502/ePaperDisplay")
+    epd_update()
 
     epd_disconnect()
