@@ -190,6 +190,9 @@ def reset_baud_rate():
 
 def epd_set_baud(baud_rate): # 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200
     global BAUD_RATE
+    if type(soc) == socket._socketobject:
+        print "> Do not change baud rate when using WiFi relay, or the WiFi module and the EPD will have different baud rates and stop understanding each other."
+        return
     if baud_rate in BAUD_RATES:
         BAUD_RATE = baud_rate
         hex_rate=('0000000'+hex(baud_rate)[2:])[-8:]
@@ -199,7 +202,7 @@ def epd_set_baud(baud_rate): # 1200, 2400, 4800, 9600, 19200, 38400, 57600, 1152
         sleep(10)
         epd_connect()
     else:
-        print "> Invalid baud rate. Pick from 75, 110, 300, 1200, 2400, 4800, 9600, 19200, 38400, 57600 and 115200 (default)"
+        print "> Invalid baud rate. Pick from",BAUD_RATES
 
 
 def epd_read_baud():
