@@ -20,9 +20,10 @@ The outcome is a BMP image with the following attributes:
 >>> from epd import *
 >>> help()              # prints help message which details all available functions
 ...
->>> epd_connect()       # must initiated serial connection first, and then send commands to EPD
+>>> epd_connect()       # must initiate a connection first, and then send commands to EPD
 > EPD connected
 > EPD handshake
+...                     # whatever you want to do with EPD
 >>> epd_disconnect()    # a clean finish after use
 ```
 

@@ -1,7 +1,7 @@
-import serial
+import os
 import socket
 from time import sleep
-from platform import system as os
+from platform import system
 
 VERBOSE = False
 LAN = "192.168.0.22" # EPD's home IP
@@ -11,12 +11,12 @@ MAC = "/dev/cu.usbserial"
 LINUX = "/dev/ttyUSB0"
 DEV = ""
 
-if os()=='Linux':
+if system()=='Linux':
     DEV = LINUX
-elif os()=='Darwin':
+elif system()=='Darwin':
     DEV = MAC
 else:
-    DEV = raw_input('Define serial port for EPD connection (e.g. /dev/ttyUSB0): ')
+    DEV = raw_input('Define serial port for EPD connection (e.g. /dev/ttyUSB1 or just hit enter for none): ')
 
 soc                 = None
 BAUD_RATE           = 115200
@@ -130,17 +130,6 @@ def send(cmd):
 
 def epd_connect():
     global soc
-    try:
-        soc = serial.Serial(
-            port=DEV,
-            baudrate=BAUD_RATE,
-            timeout=1
-        )
-        print "> EPD connected via serial port"
-        return
-    except:
-        print ">> Failed to connect to USB serial port"
-
     soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     soc.settimeout(1)
     for ip in [LAN, AP]:
@@ -149,9 +138,22 @@ def epd_connect():
             print "> EPD connected at %s:%s" % (ip, PORT)
             break
         except:
-            print ">> Failed to connect to %s:%s" % (ip, PORT)
+            print ">> EPD not found at %s:%s" % (ip, PORT)
     else:
-        print ">> Unable to connect to EPD."
+        if os.path.exists(DEV):
+            import serial
+            try:
+                soc = serial.Serial(
+                    port=DEV,
+                    baudrate=BAUD_RATE,
+                    timeout=1
+                )
+                print "> EPD connected via serial port"
+                return
+            except:
+                print ">> Unable to connect to USB serial port", DEV
+        else:
+            print ">> Serial port unavailable",DEV
 
 
 def epd_verbose(v):
@@ -450,7 +452,7 @@ def wrap_ascii(x,y,txt,limit=800,size=32): # does not work well with size 48 or 
 
 def help(): # list all available functions
     print """\
-epd_connect()                           # open serial connection to EPD
+epd_connect()                           # opens a connection to EPD (TCP/IP or USB serial)
 epd_handshake()                         # check if EPD is ready via serial connection
 epd_disconnect()                        # close serial connection to EPD
 epd_verbose(True|False)                 # enable/disable(default) verbose serial communication (SLOW!)
