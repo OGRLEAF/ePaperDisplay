@@ -108,8 +108,8 @@ LCD_DIGIT_WIDTH = 120
 LCD_DIGIT_HEIGHT = 220
 LCD_SPACING = 20 # space between 2 adjacent digits
 
-PBG0 = 0,0 # two points defining the background area of each digit
-PBG1 = LCD_DIGIT_WIDTH,LCD_DIGIT_HEIGHT
+PBG0 = [0,0] # two points defining the background area of each digit
+PBG1 = [LCD_DIGIT_WIDTH,LCD_DIGIT_HEIGHT]
 
 P01 = (20,0)
 P02 = (100,0)
@@ -176,7 +176,7 @@ LCD_7 = H1+V1+V2+V4
 LCD_8 = H1+H2+H3+V1+V2+V3+V4
 LCD_9 = H1+H2+H3+V1+V2+V4
 LCD_COLON = C1+C2
-LCD_BG = [PBG0+PBG1]
+LCD_BG = PBG0+PBG1
 
 # for quick retrieval using target digit as index
 LCD_DIGITS = [LCD_0,LCD_1,LCD_2,LCD_3,LCD_4,LCD_5,LCD_6,LCD_7,LCD_8,LCD_9]
@@ -189,7 +189,7 @@ LCD_LG = 3.0
 def lcd_clear(x,y,scale): # scaling needs improving!!!
     x0,y0,x1,y1 = LCD_BG
     epd_set_color(WHITE,WHITE)
-    epd_fill_rect(scale*x0+x,scale*y0+y,scale*x1+x,scale*y1+y)
+    epd_fill_rect(int(scale*x0+x),int(scale*y0+y),int(scale*x1+x),int(scale*y1+y))
     epd_set_color(BLACK,WHITE)
 
 def lcd_digit(x,y,d,scale=1.0): # scaling needs improving!!!
@@ -197,12 +197,12 @@ def lcd_digit(x,y,d,scale=1.0): # scaling needs improving!!!
         lcd_clear(x,y,scale)
         for rect in LCD_COLON:
             (x0,y0),(x1,y1) = rect
-            epd_fill_rect(scale*x0+x,scale*y0+y,scale*x1+x,scale*y1+y)
+            epd_fill_rect(int(scale*x0+x),int(scale*y0+y),int(scale*x1+x),int(scale*y1+y))
     elif d in [str(x) for x in range(0,10)]:
         lcd_clear(x,y,scale)
         for tri in LCD_DIGITS[int(d)]:
             (x0,y0),(x1,y1),(x2,y2) = tri
-            epd_fill_triangle(scale*x0+x,scale*y0+y,scale*x1+x,scale*y1+y,scale*x2+x,scale*y2+y)
+            epd_fill_triangle(int(scale*x0+x),int(scale*y0+y),int(scale*x1+x),int(scale*y1+y),int(scale*x2+x),int(scale*y2+y))
     else:
         print "%s is not a digit or colon" % d
 
@@ -211,7 +211,7 @@ def lcd_digits(x,y,digits,scale=1.0):
     # or a time with colon as the separator, e.g. 12:48
     count = 0
     for d in digits:
-        lcd_digit(x+count*scale*(LCD_WIDTH+LCD_SPACING),
+        lcd_digit(x+count*scale*(LCD_DIGIT_WIDTH+LCD_SPACING),
                   y+count*scale*(LCD_DIGIT_HEIGHT+LCD_SPACING),
                   d, scale)
         count+=1
