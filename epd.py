@@ -188,38 +188,48 @@ LCD_BG = PBG0+PBG1
 LCD_DIGITS = [LCD_0,LCD_1,LCD_2,LCD_3,LCD_4,LCD_5,LCD_6,LCD_7,LCD_8,LCD_9]
 
 # some default LCD digit sizes/scales
-LCD_SM = 1.0
-LCD_MD = 2.0
-LCD_LG = 3.0
+LCD_SM = 0.33 # approx. 17 digits over entire width
+LCD_MD = 0.63 # approx. 9 digits over entire width
+LCD_LG = 1.15 # approx. 5 digits over entire width 
 
-def lcd_clear(x,y,scale): # scaling needs improving!!!
-    x0,y0,x1,y1 = LCD_BG
-    epd_set_color(WHITE,WHITE)
-    epd_fill_rect(int(scale*x0+x),int(scale*y0+y),int(scale*x1+x),int(scale*y1+y))
-    epd_set_color(BLACK,WHITE)
+# NOTE:
+#   the EPD does not handle too many triangles at a time
+#   if it does not display the digits sent, there are too many
+#   send over a few segments until I fix it
 
-def lcd_digit(x,y,d,scale=1.0): # scaling needs improving!!!
+def lcd_digit(x,y,d,scale=LCD_MD):
+    # draw digit over existing image with transparency like other hollow shapes
     if d == ':':
-        lcd_clear(x,y,scale)
         for rect in LCD_COLON:
             (x0,y0),(x1,y1) = rect
-            epd_fill_rect(int(scale*x0+x),int(scale*y0+y),int(scale*x1+x),int(scale*y1+y))
-    elif d in [str(x) for x in range(0,10)]:
-        lcd_clear(x,y,scale)
+            epd_fill_rect(int(scale*x0+x),int(scale*y0+y),
+                          int(scale*x1+x),int(scale*y1+y))
+    elif d in [str(s) for s in range(0,10)]:
         for tri in LCD_DIGITS[int(d)]:
             (x0,y0),(x1,y1),(x2,y2) = tri
-            epd_fill_triangle(int(scale*x0+x),int(scale*y0+y),int(scale*x1+x),int(scale*y1+y),int(scale*x2+x),int(scale*y2+y))
+            epd_fill_triangle(int(scale*x0+x),int(scale*y0+y),
+                              int(scale*x1+x),int(scale*y1+y),
+                              int(scale*x2+x),int(scale*y2+y))
     else:
         print "%s is not a digit or colon" % d
 
-def lcd_digits(x,y,digits,scale=1.0):
+def epd_digits(x,y,digits,scale=LCD_MD):
+    if digits=='':
+        return
     # for now, the input is expected to be a sequence of digits
     # or a time with colon as the separator, e.g. 12:48
+
+    # fill all digits area including spacing with white rectangle
+    epd_set_color(WHITE,WHITE)
+    epd_fill_rect(x,
+                  y,
+                  int(x+(len(digits)-1)*(LCD_DIGIT_WIDTH+LCD_SPACING)*scale+LCD_DIGIT_WIDTH*scale),
+                  int(y+LCD_DIGIT_HEIGHT*scale))
+    epd_set_color(BLACK,WHITE)
+
     count = 0
     for d in digits:
-        lcd_digit(x+count*scale*(LCD_DIGIT_WIDTH+LCD_SPACING),
-                  y+count*scale*(LCD_DIGIT_HEIGHT+LCD_SPACING),
-                  d, scale)
+        lcd_digit(int(x+count*scale*(LCD_DIGIT_WIDTH+LCD_SPACING)), y, d, scale)
         count+=1
 
 
@@ -605,6 +615,9 @@ epd_screen_invert()                     # flip EPD screen 180 degrees
 epd_clear()                             # clear display
 epd_update()                            # update screen with buffered commands
 
+epd_digits(x,y,"digits string",scale=LCD_SM|LCD_MD|LCD_LG)
+                                        # display digits including colon in LCD-digit font
+                                        # scale can be any reasonable number
 epd_ascii(x,y,"ascii string")           # display ascii string
 epd_chinese(x,y,"hex code of Chinese")  # display Chinese string
 
