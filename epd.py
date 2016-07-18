@@ -203,7 +203,7 @@ def lcd_digit(x,y,d,scale=1.0): # scaling needs improving!!!
         for tri in LCD_DIGITS[int(d)]:
             (x0,y0),(x1,y1),(x2,y2) = tri
             epd_fill_triangle(scale*x0+x,scale*y0+y,scale*x1+x,scale*y1+y,scale*x2+x,scale*y2+y)
-    except:
+    else:
         print "%s is not a digit or colon" % d
 
 def lcd_digits(x,y,digits,scale=1.0):
