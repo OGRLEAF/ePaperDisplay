@@ -98,6 +98,44 @@ _cmd_use_nand    = FRAME_BEGIN+"000A"+CMD_MEMORYMODE+MEM_NAND+FRAME_END
 _cmd_use_sd      = FRAME_BEGIN+"000A"+CMD_MEMORYMODE+MEM_SD+FRAME_END
 
 
+# vector 7 segment LCD digits (calculator-like digits)
+# limited to black digit on white background
+# I will add vectorised alphabets later if I have time
+# 
+# hhhh             H1
+# v  v           V1  V2
+# hhhh             H2
+# v  v           V3  V4
+# hhhh             H3
+# 
+# each stroke is drawn with 4 triangles on a white rectangle background
+# origin is top-left corner
+# default digit size is 225 x 125 without padding around each digit
+
+p1 = ()
+
+H1 = [ (20,1,30,30,10,10),
+       (100,1,110,10,90,30),
+       (20,1,100,1,30,30),
+       (100,1,90,30,30,30) ]
+
+H2 = [ (30,95,30,125,15,110),
+       (90,95,105,110,90,125),
+       (30,95,90,95,30,125),
+       (90,95,90,125,30,125) ]
+
+H3 = [ (20,220,30,190,10,210),
+       (100,220,110,210,90,190),
+       (20,220,100,220,30,190),
+       (100,220,90,190,30,190) ]
+
+
+def digit():
+    for tri in H1+H2+H3:
+        x0,y0,x1,y1,x2,y2 = tri
+        epd_fill_triangle(x0,y0,x1,y1,x2,y2)
+    epd_update()
+
 # ASCII string to Hex string. e.g. "World" => "576F726C64"
 def A2H(string):
     hex_str = ""
