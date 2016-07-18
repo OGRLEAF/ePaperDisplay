@@ -16,7 +16,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="grid.svg">
+   sodipodi:docname="LCD_digit_font_design.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -45,7 +45,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -2724,7 +2724,7 @@
          sodipodi:role="line"
          id="tspan10395"
          x="600.82355"
-         y="607.42102">120,125 p21</tspan></text>
+         y="607.42102">120,125 p22</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -2735,7 +2735,7 @@
          sodipodi:role="line"
          id="tspan10399"
          x="601.23529"
-         y="887.8916">120,200 p29</tspan></text>
+         y="887.8916">120,200 p30</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -2746,7 +2746,7 @@
          sodipodi:role="line"
          id="tspan10403"
          x="491.58823"
-         y="849.77399">90,190 p27</tspan></text>
+         y="849.77399">90,190 p28</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -2757,7 +2757,7 @@
          sodipodi:role="line"
          id="tspan10407"
          x="564.58826"
-         y="922.00928">110,210 p31</tspan></text>
+         y="922.00928">110,210 p32</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -2768,7 +2768,7 @@
          sodipodi:role="line"
          id="tspan10411"
          x="526.88232"
-         y="961.18573">100,220 p33</tspan></text>
+         y="961.18573">100,220 p34</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -2779,7 +2779,7 @@
          sodipodi:role="line"
          id="tspan10415"
          x="229.41176"
-         y="960.77399">20,220 p32</tspan></text>
+         y="960.77399">20,220 p33</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -2790,7 +2790,7 @@
          sodipodi:role="line"
          id="tspan10419"
          x="196.41176"
-         y="922.65631">10,210 p30</tspan></text>
+         y="922.65631">10,210 p31</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -2801,7 +2801,7 @@
          sodipodi:role="line"
          id="tspan10423"
          x="270.05881"
-         y="848.18573">30,190 p26</tspan></text>
+         y="848.18573">30,190 p27</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -2812,7 +2812,7 @@
          sodipodi:role="line"
          id="tspan10427"
          x="158.70589"
-         y="886.42102">0,200 p28</tspan></text>
+         y="886.42102">0,200 p29</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -2927,7 +2927,7 @@
          sodipodi:role="line"
          id="tspan10467"
          x="324.35294"
-         y="629.36218">45,130 p22</tspan></text>
+         y="629.36218">45,130 p23</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -2938,7 +2938,7 @@
          sodipodi:role="line"
          id="tspan10471"
          x="437.05881"
-         y="627.8916">75,130 p23</tspan></text>
+         y="627.8916">75,130 p24</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -2949,7 +2949,7 @@
          sodipodi:role="line"
          id="tspan10475"
          x="436.11765"
-         y="737.06812">75,160 p25</tspan></text>
+         y="737.06812">75,160 p26</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -2960,6 +2960,17 @@
          sodipodi:role="line"
          id="tspan10479"
          x="321.41177"
-         y="737.47986">45,160 p24</tspan></text>
+         y="737.47986">45,160 p25</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="491.05881"
+       y="609.83276"
+       id="text3690"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3692"
+         x="491.05881"
+         y="609.83276">90,125 p21</tspan></text>
   </g>
 </svg>
