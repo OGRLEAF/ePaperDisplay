@@ -146,14 +146,16 @@ P32 = (110,210)
 P33 = (20,220)
 P34 = (100,220)
 
-#  ---              H1
-# | . |           V1C1V2
-#  ---              H2
-# | . |           V3C2V4
-#  ---              H3
+#  ---               H1
+# | . |           V1 C1 V2
+#><---><         T1T2H2T3T4
+# | . |           V3 C2 V4
+#  ---               H3
 # 
-# each stroke is drawn with 4 filled triangles
+# each horizontal/vertical stroke is drawn with 4 filled triangles
 # each dot of colon is a filled rectangle
+# each triangle filler beside H2 is a filled triangle
+# H2 overlaps with T2 and T3
 
 H1 = [(P01,P07,P03),(P01,P07,P02),(P02,P08,P04),(P02,P08,P07)]
 H2 = [(P14,P20,P17),(P14,P20,P15),(P15,P21,P20),(P15,P21,P18)]
@@ -164,17 +166,21 @@ V3 = [(P19,P20,P17),(P19,P20,P29),(P29,P27,P20),(P29,P27,P31)]
 V4 = [(P21,P22,P18),(P21,P22,P28),(P28,P30,P22),(P28,P30,P32)]
 C1 = [(P09,P12)]
 C2 = [(P23,P26)]
+T1 = [(P13,P19,P17)]
+T2 = [(P14,P20,P17)]
+T3 = [(P15,P21,P18)]
+T4 = [(P16,P22,P18)]
 
-LCD_0 = H1+H3+V1+V2+V3+V4
-LCD_1 = V2+V4
+LCD_0 = H1+H3+V1+V2+V3+V4+T1+T2+T3+T4
+LCD_1 = V2+V4+T3+T4
 LCD_2 = H1+H2+H3+V2+V3
-LCD_3 = H1+H2+H3+V2+V4
-LCD_4 = H2+V1+V2+V4
+LCD_3 = H1+H2+H3+V2+V4+T4
+LCD_4 = H2+V1+V2+V4+T4
 LCD_5 = H1+H2+H3+V1+V4
-LCD_6 = H1+H2+H3+V1+V3+V4
-LCD_7 = H1+V1+V2+V4
-LCD_8 = H1+H2+H3+V1+V2+V3+V4
-LCD_9 = H1+H2+H3+V1+V2+V4
+LCD_6 = H1+H2+H3+V1+V3+V4+T1
+LCD_7 = H1+V1+V2+V4+T3+T4
+LCD_8 = H1+H2+H3+V1+V2+V3+V4+T1+T4
+LCD_9 = H1+H2+H3+V1+V2+V4+T4
 LCD_COLON = C1+C2
 LCD_BG = PBG0+PBG1
 
