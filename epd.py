@@ -99,42 +99,123 @@ _cmd_use_sd      = FRAME_BEGIN+"000A"+CMD_MEMORYMODE+MEM_SD+FRAME_END
 
 
 # vector 7 segment LCD digits (calculator-like digits)
-# limited to black digit on white background
-# I will add vectorised alphabets later if I have time
 # 
-# hhhh             H1
-# v  v           V1  V2
-# hhhh             H2
-# v  v           V3  V4
-# hhhh             H3
-# 
-# each stroke is drawn with 4 triangles on a white rectangle background
+# 34 points that make up all the stokes
 # origin is top-left corner
-# default digit size is 225 x 125 without padding around each digit
+# see ePaperDisplay/docs/LCD_digit_font_design.svg for reference
 
-p1 = ()
+LCD_DIGIT_WIDTH = 120
+LCD_DIGIT_HEIGHT = 220
+LCD_SPACING = 20 # space between 2 adjacent digits
 
-H1 = [ (20,1,30,30,10,10),
-       (100,1,110,10,90,30),
-       (20,1,100,1,30,30),
-       (100,1,90,30,30,30) ]
+PBG0 = 0,0 # two points defining the background area of each digit
+PBG1 = LCD_DIGIT_WIDTH,LCD_DIGIT_HEIGHT
 
-H2 = [ (30,95,30,125,15,110),
-       (90,95,105,110,90,125),
-       (30,95,90,95,30,125),
-       (90,95,90,125,30,125) ]
+P01 = (20,0)
+P02 = (100,0)
+P03 = (10,10)
+P04 = (110,10)
+P05 = (0,20)
+P06 = (120,20)
+P07 = (30,30)
+P08 = (90,30)
+P09 = (45,60)
+P10 = (75,60) # unused
+P11 = (45,90) # unused
+P12 = (75,90)
+P13 = (0,95)
+P14 = (30,95)
+P15 = (90,95)
+P16 = (120,95)
+P17 = (15,110)
+P18 = (105,110)
+P19 = (0,125)
+P20 = (30,125)
+P21 = (90,125)
+P22 = (120,125)
+P23 = (45,130)
+P24 = (75,130) # unused
+P25 = (45,160) # unused
+P26 = (75,160)
+P27 = (30,190)
+P28 = (90,190)
+P29 = (0,200)
+P30 = (120,200)
+P31 = (10,210)
+P32 = (110,210)
+P33 = (20,220)
+P34 = (100,220)
 
-H3 = [ (20,220,30,190,10,210),
-       (100,220,110,210,90,190),
-       (20,220,100,220,30,190),
-       (100,220,90,190,30,190) ]
+#  ---              H1
+# | . |           V1C1V2
+#  ---              H2
+# | . |           V3C2V4
+#  ---              H3
+# 
+# each stroke is drawn with 4 filled triangles
+# each dot of colon is a filled rectangle
 
+H1 = [(P01,P07,P03),(P01,P07,P02),(P02,P08,P04),(P02,P08,P07)]
+H2 = [(P14,P20,P17),(P14,P20,P15),(P15,P21,P20),(P15,P21,P18)]
+H3 = [(P27,P33,P31),(P27,P33,P28),(P28,P34,P33),(P28,P34,P32)]
+V1 = [(P05,P07,P03),(P05,P07,P13),(P13,P14,P07),(P13,P14,P17)]
+V2 = [(P08,P06,P04),(P08,P06,P15),(P15,P16,P06),(P15,P16,P18)]
+V3 = [(P19,P20,P17),(P19,P20,P29),(P29,P27,P20),(P29,P27,P31)]
+V4 = [(P21,P22,P18),(P21,P22,P28),(P28,P30,P22),(P28,P30,P32)]
+C1 = [(P09,P12)]
+C2 = [(P23,P26)]
 
-def digit():
-    for tri in H1+H2+H3:
-        x0,y0,x1,y1,x2,y2 = tri
-        epd_fill_triangle(x0,y0,x1,y1,x2,y2)
-    epd_update()
+LCD_0 = H1+H3+V1+V2+V3+V4
+LCD_1 = V2+V4
+LCD_2 = H1+H2+H3+V2+V3
+LCD_3 = H1+H2+H3+V2+V4
+LCD_4 = H2+V1+V2+V4
+LCD_5 = H1+H2+H3+V1+V4
+LCD_6 = H1+H2+H3+V1+V3+V4
+LCD_7 = H1+V1+V2+V4
+LCD_8 = H1+H2+H3+V1+V2+V3+V4
+LCD_9 = H1+H2+H3+V1+V2+V4
+LCD_COLON = C1+C2
+LCD_BG = [PBG0+PBG1]
+
+# for quick retrieval using target digit as index
+LCD_DIGITS = [LCD_0,LCD_1,LCD_2,LCD_3,LCD_4,LCD_5,LCD_6,LCD_7,LCD_8,LCD_9]
+
+# some default LCD digit sizes/scales
+LCD_SM = 1.0
+LCD_MD = 2.0
+LCD_LG = 3.0
+
+def lcd_clear(x,y,scale): # scaling needs improving!!!
+    x0,y0,x1,y1 = LCD_BG
+    epd_set_color(WHITE,WHITE)
+    epd_fill_rect(scale*x0+x,scale*y0+y,scale*x1+x,scale*y1+y)
+    epd_set_color(BLACK,WHITE)
+
+def lcd_digit(x,y,d,scale=1.0): # scaling needs improving!!!
+    if d == ':':
+        lcd_clear(x,y,scale)
+        for rect in LCD_COLON:
+            (x0,y0),(x1,y1) = rect
+            epd_fill_rect(scale*x0+x,scale*y0+y,scale*x1+x,scale*y1+y)
+    elif d in [str(x) for x in range(0,10)]:
+        lcd_clear(x,y,scale)
+        for tri in LCD_DIGITS[int(d)]:
+            (x0,y0),(x1,y1),(x2,y2) = tri
+            epd_fill_triangle(scale*x0+x,scale*y0+y,scale*x1+x,scale*y1+y,scale*x2+x,scale*y2+y)
+    except:
+        print "%s is not a digit or colon" % d
+
+def lcd_digits(x,y,digits,scale=1.0):
+    # for now, the input is expected to be a sequence of digits
+    # or a time with colon as the separator, e.g. 12:48
+    count = 0
+    for d in digits:
+        lcd_digit(x+count*scale*(LCD_WIDTH+LCD_SPACING),
+                  y+count*scale*(LCD_DIGIT_HEIGHT+LCD_SPACING),
+                  d, scale)
+        count+=1
+
 
 # ASCII string to Hex string. e.g. "World" => "576F726C64"
 def A2H(string):
