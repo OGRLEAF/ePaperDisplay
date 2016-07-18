@@ -219,10 +219,9 @@ def epd_digits(x,y,digits,scale=LCD_MD):
     # for now, the input is expected to be a sequence of digits
     # or a time with colon as the separator, e.g. 12:48
 
-    # fill all digits area including spacing with white rectangle
+    # fill all background area including spacing with white rectangle
     epd_set_color(WHITE,WHITE)
-    epd_fill_rect(x,
-                  y,
+    epd_fill_rect(x,y,
                   int(x+(len(digits)-1)*(LCD_DIGIT_WIDTH+LCD_SPACING)*scale+LCD_DIGIT_WIDTH*scale),
                   int(y+LCD_DIGIT_HEIGHT*scale))
     epd_set_color(BLACK,WHITE)
