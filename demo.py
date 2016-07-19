@@ -87,13 +87,10 @@ def english_block():
 # display LCD digits in 3 sizes
 def lcd_digits():
     epd_digits(0,0,'0:1234567',LCD_SM)
-    epd_update()
     sleep(3)
     epd_digits(0,100,'0:1234567',LCD_MD)
-    epd_update()
     sleep(3)
     epd_digits(0,300,'0:123',LCD_LG)
-    epd_update()
 
 if __name__=="__main__":
     try:
