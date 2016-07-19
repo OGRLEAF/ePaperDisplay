@@ -229,11 +229,13 @@ def epd_digits(x,y,digits,scale=LCD_MD):
     count = 0
     for d in digits:
         lcd_digit(int(x+count*scale*(LCD_DIGIT_WIDTH+LCD_SPACING)), y, d, scale)
+        print d
         count+=1
         if count % 5 == 0:
             # force an update every 5 digits to avoid a no-display
             # due to too many triangles filling up EPD's buffer
             epd_update()
+            sleep(2)
     if count % 5 != 0:
         # so we don't refresh twice if we just did it by the last digit in the loop
         epd_update()
