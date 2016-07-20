@@ -211,7 +211,7 @@ def lcd_digit(x,y,d,scale=LCD_MD):
                               int(scale*x1+x),int(scale*y1+y),
                               int(scale*x2+x),int(scale*y2+y))
     else:
-        print "%s is not a digit or colon" % d
+        print "'%s' is not a digit or colon. Leaving it blank." % d
 
 def epd_digits(x,y,digits,scale=LCD_MD):
     if digits=='':
