@@ -94,11 +94,11 @@ def lcd_digits():
 
 # display block digits in 3 sizes
 def block_digits():
-    epd_block_digits(200,100,':01234567891234',width=10)
+    epd_block_digits(0,0,':01234567891234',scale=BLOCK_SM)
     sleep(3)
-    epd_block_digits(200,200,':012345',width=20)
+    epd_block_digits(0,100,':012345',scale=BLOCK_MD)
     sleep(3)
-    epd_block_digits(200,400,':0123',width=40)
+    epd_block_digits(0,300,':0123',scale=BLOCK_LG)
 
 if __name__=="__main__":
     try:
