@@ -86,11 +86,19 @@ def english_block():
 
 # display LCD digits in 3 sizes
 def lcd_digits():
-    epd_digits(0,0,'0:1234567',LCD_SM)
+    epd_lcd_digits(0,0,'0:1234567',scale=LCD_SM)
     sleep(3)
-    epd_digits(0,100,'0:1234567',LCD_MD)
+    epd_lcd_digits(0,100,'0:1234567',scale=LCD_MD)
     sleep(3)
-    epd_digits(0,300,'0:123',LCD_LG)
+    epd_lcd_digits(0,300,'0:123',scale=LCD_LG)
+
+# display block digits in 3 sizes
+def block_digits():
+    epd_block_digits(200,100,':01234567891234',width=10)
+    sleep(3)
+    epd_block_digits(200,200,':012345',width=20)
+    sleep(3)
+    epd_block_digits(200,400,':0123',width=40)
 
 if __name__=="__main__":
     try:
@@ -133,6 +141,8 @@ if __name__=="__main__":
     sleep(5)
     lcd_digits()
     sleep(5)
+    block_digits()
+    sleep(3)
     epd_bitmap(100,0,"FACE.BMP")
     epd_set_en_font(ASCII48)
     epd_ascii(0,540,"http://github.com/yy502/ePaperDisplay")
