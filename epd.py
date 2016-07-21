@@ -255,32 +255,31 @@ def epd_lcd_digits(x,y,digits,scale=LCD_MD):
 #   # # #   # # #   #   #   # #    #  # #  #
 # ### ###   # ### ###   # ### ###  #  ###
 
-BLOCK_DIGIT_UNIT = 10 # change this for scaling
-BLOCK_DIGIT_WIDTH = BLOCK_DIGIT_UNIT*3
-BLOCK_DIGIT_HEIGHT = BLOCK_DIGIT_UNIT*5
-BLOCK_DIGIT_SPACING = BLOCK_DIGIT_UNIT # space between 2 block digits
+BLOCK_DIGIT_WIDTH = 30
+BLOCK_DIGIT_HEIGHT = 50
+BLOCK_DIGIT_SPACING = 5 # space between 2 block digits
 
 BP01 = (0,0)
-BP02 = (BLOCK_DIGIT_UNIT,0)
-BP03 = (BLOCK_DIGIT_UNIT*2,0)
-BP04 = (0,BLOCK_DIGIT_UNIT)
-BP05 = (BLOCK_DIGIT_UNIT,BLOCK_DIGIT_UNIT)
-BP06 = (BLOCK_DIGIT_UNIT*2,BLOCK_DIGIT_UNIT*2)
-BP07 = (BLOCK_DIGIT_UNIT*3,BLOCK_DIGIT_UNIT*2)
-BP08 = (0,BLOCK_DIGIT_UNIT*3)
-BP09 = (BLOCK_DIGIT_UNIT,BLOCK_DIGIT_UNIT*3)
-BP10 = (BLOCK_DIGIT_UNIT*2,BLOCK_DIGIT_UNIT*4)
-BP11 = (BLOCK_DIGIT_UNIT*3,BLOCK_DIGIT_UNIT*4)
-BP12 = (BLOCK_DIGIT_UNIT,BLOCK_DIGIT_UNIT*5)
-BP13 = (BLOCK_DIGIT_UNIT*2,BLOCK_DIGIT_UNIT*5)
-BP14 = (BLOCK_DIGIT_UNIT*3,BLOCK_DIGIT_UNIT*5)
+BP02 = (10,0)
+BP03 = (20,0)
+BP04 = (0,10)
+BP05 = (10,10)
+BP06 = (20,20)
+BP07 = (30,20)
+BP08 = (0,30)
+BP09 = (10,30)
+BP10 = (20,40)
+BP11 = (30,40)
+BP12 = (10,50)
+BP13 = (20,50)
+BP14 = (30,50)
 
 BLK_0 = [(BP05,BP10)]
 BLK_1 = [(BP01,BP12),(BP03,BP14)]
 BLK_2 = [(BP04,BP06),(BP09,BP11)]
 BLK_3 = [(BP04,BP06),(BP08,BP10)]
 BLK_4 = [(BP02,BP06),(BP08,BP13)]
-BLK_5 = [(BP05,BP07),(BP08,BP11)]
+BLK_5 = [(BP05,BP07),(BP08,BP10)]
 BLK_6 = [(BP02,BP07),(BP09,BP10)]
 BLK_7 = [(BP04,BP13)]
 BLK_8 = [(BP05,BP06),(BP09,BP10)]
@@ -291,38 +290,47 @@ BLK_BG = (BP01,BP14)
 # for quick retrieval using target digit as index
 BLK_DIGITS = [BLK_0,BLK_1,BLK_2,BLK_3,BLK_4,BLK_5,BLK_6,BLK_7,BLK_8,BLK_9]
 
-def block_digit(x,y,d,width=BLOCK_DIGIT_UNIT):
-    BLOCK_DIGIT_UNIT = width
+# some default LCD digit sizes/scales
+BLOCK_SM = 1.0 # approx. 23 digits over entire width
+BLOCK_MD = 2.5 # approx. 9 digits over entire width
+BLOCK_LG = 4.65 # approx. 5 digits over entire width
+
+def block_digit(x,y,d,scale=BLOCK_SM):
     (x0,y0),(x1,y1) = BLK_BG
 
     if d == ':':
         epd_set_color(WHITE,WHITE)
-        epd_fill_rect(x0,y0,x1,y1)
+        epd_fill_rect(int(scale*x0+x),int(scale*y0+y),
+                      int(scale*x1+x),int(scale*y1+y))
         epd_set_color(BLACK,WHITE)
         d = '8'
     elif d in [str(s) for s in range(0,10)]:
         epd_set_color(BLACK,WHITE)
-        epd_fill_rect(x0,y0,x1,y1)
+        epd_fill_rect(int(scale*x0+x),int(scale*y0+y),
+                      int(scale*x1+x),int(scale*y1+y))
         epd_set_color(WHITE,WHITE)
     else:
         print "'%s' is not a digit or colon. Leaving it blank." % d
-        epd_set_color(WHITE,WHITE)
-        epd_fill_rect(x0,y0,x1,y1)
-        epd_set_color(BLACK,WHITE)
         return
 
     for rect in BLK_DIGITS[int(d)]:
         (x0,y0),(x1,y1) = rect
-        epd_fill_rect(x0,y0,x1,y1)
+        epd_fill_rect(int(scale*x0+x),int(scale*y0+y),
+                      int(scale*x1+x),int(scale*y1+y))
     epd_set_color(BLACK,WHITE)
 
 
-def epd_block_digits(x,y,digits,width=BLOCK_DIGIT_UNIT):
+def epd_block_digits(x,y,digits,scale=BLOCK_SM):
     if digits=='':
         return
+    # fill all background area including spacing with white rectangle
+    epd_set_color(WHITE,WHITE)
+    epd_fill_rect(x,y,
+                  int(x+(len(digits)-1)*(BLOCK_DIGIT_SPACING+BLOCK_DIGIT_WIDTH)*scale+BLOCK_DIGIT_WIDTH*scale),
+                  int(y+BLOCK_DIGIT_HEIGHT*scale))
     count = 0
     for d in digits:
-        block_digit(x+count*(BLOCK_DIGIT_WIDTH+BLOCK_DIGIT_SPACING), y, d, width)
+        block_digit(int(x+count*scale*(BLOCK_DIGIT_SPACING+BLOCK_DIGIT_WIDTH)), y, d, scale)
         count+=1
     epd_update()
 
@@ -709,13 +717,12 @@ epd_screen_invert()                     # flip EPD screen 180 degrees
 epd_clear()                             # clear display
 epd_update()                            # update screen with buffered commands
 
-epd_lcd_digits(x,y,"digits string",scale=LCD_SM|LCD_MD|LCD_LG)
+epd_lcd_digits(x,y,"digits string",scale=LCD_SM|LCD_MD|LCD_LG|<num>)
                                         # display digits including colon in LCD-digit font
                                         # scale can be any reasonable number
-epd_block_digits(x,y,"digits string",width=<int>)
-                                        # display 3 units x 5 units block digits including colon
-                                        # width should be an int indicating unit width
-                                        # default = 10 (pixels), meaning each digit is 30x50 pixels
+epd_block_digits(x,y,"digits string",scale=BLOCK_SM|BLOCK_MD|BLOCK_LG|<num>)
+                                        # display 3x5 block digits including colon
+                                        # scale can be any reasonable number
 epd_ascii(x,y,"ascii string")           # display ascii string
 epd_chinese(x,y,"hex code of Chinese")  # display Chinese string
 
