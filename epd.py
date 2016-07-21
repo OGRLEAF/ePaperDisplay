@@ -108,43 +108,43 @@ LCD_DIGIT_WIDTH = 120
 LCD_DIGIT_HEIGHT = 220
 LCD_SPACING = 20 # space between 2 adjacent digits
 
-PBG0 = [0,0] # two points defining the background area of each digit
-PBG1 = [LCD_DIGIT_WIDTH,LCD_DIGIT_HEIGHT]
+LPBG0 = [0,0] # two points defining the background area of each digit
+LPBG1 = [LCD_DIGIT_WIDTH,LCD_DIGIT_HEIGHT]
 
-P01 = (20,0)
-P02 = (100,0)
-P03 = (10,10)
-P04 = (110,10)
-P05 = (0,20)
-P06 = (120,20)
-P07 = (30,30)
-P08 = (90,30)
-P09 = (45,60)
-P10 = (75,60) # unused
-P11 = (45,90) # unused
-P12 = (75,90)
-P13 = (0,95)
-P14 = (30,95)
-P15 = (90,95)
-P16 = (120,95)
-P17 = (15,110)
-P18 = (105,110)
-P19 = (0,125)
-P20 = (30,125)
-P21 = (90,125)
-P22 = (120,125)
-P23 = (45,130)
-P24 = (75,130) # unused
-P25 = (45,160) # unused
-P26 = (75,160)
-P27 = (30,190)
-P28 = (90,190)
-P29 = (0,200)
-P30 = (120,200)
-P31 = (10,210)
-P32 = (110,210)
-P33 = (20,220)
-P34 = (100,220)
+LP01 = (20,0)
+LP02 = (100,0)
+LP03 = (10,10)
+LP04 = (110,10)
+LP05 = (0,20)
+LP06 = (120,20)
+LP07 = (30,30)
+LP08 = (90,30)
+LP09 = (45,60)
+LP10 = (75,60) # unused
+LP11 = (45,90) # unused
+LP12 = (75,90)
+LP13 = (0,95)
+LP14 = (30,95)
+LP15 = (90,95)
+LP16 = (120,95)
+LP17 = (15,110)
+LP18 = (105,110)
+LP19 = (0,125)
+LP20 = (30,125)
+LP21 = (90,125)
+LP22 = (120,125)
+LP23 = (45,130)
+LP24 = (75,130) # unused
+LP25 = (45,160) # unused
+LP26 = (75,160)
+LP27 = (30,190)
+LP28 = (90,190)
+LP29 = (0,200)
+LP30 = (120,200)
+LP31 = (10,210)
+LP32 = (110,210)
+LP33 = (20,220)
+LP34 = (100,220)
 
 #  ---               H1
 # | . |           V1 C1 V2
@@ -157,19 +157,19 @@ P34 = (100,220)
 # each triangle filler beside H2 is a filled triangle
 # H2 overlaps with T2 and T3
 
-H1 = [(P01,P07,P03),(P01,P07,P02),(P02,P08,P04),(P02,P08,P07)]
-H2 = [(P14,P20,P17),(P14,P20,P15),(P15,P21,P20),(P15,P21,P18)]
-H3 = [(P27,P33,P31),(P27,P33,P28),(P28,P34,P33),(P28,P34,P32)]
-V1 = [(P05,P07,P03),(P05,P07,P13),(P13,P14,P07),(P13,P14,P17)]
-V2 = [(P08,P06,P04),(P08,P06,P15),(P15,P16,P06),(P15,P16,P18)]
-V3 = [(P19,P20,P17),(P19,P20,P29),(P29,P27,P20),(P29,P27,P31)]
-V4 = [(P21,P22,P18),(P21,P22,P28),(P28,P30,P22),(P28,P30,P32)]
-C1 = [(P09,P12)]
-C2 = [(P23,P26)]
-T1 = [(P13,P19,P17)]
-T2 = [(P14,P20,P17)]
-T3 = [(P15,P21,P18)]
-T4 = [(P16,P22,P18)]
+H1 = [(LP01,LP07,LP03),(LP01,LP07,LP02),(LP02,LP08,LP04),(LP02,LP08,LP07)]
+H2 = [(LP14,LP20,LP17),(LP14,LP20,LP15),(LP15,LP21,LP20),(LP15,LP21,LP18)]
+H3 = [(LP27,LP33,LP31),(LP27,LP33,LP28),(LP28,LP34,LP33),(LP28,LP34,LP32)]
+V1 = [(LP05,LP07,LP03),(LP05,LP07,LP13),(LP13,LP14,LP07),(LP13,LP14,LP17)]
+V2 = [(LP08,LP06,LP04),(LP08,LP06,LP15),(LP15,LP16,LP06),(LP15,LP16,LP18)]
+V3 = [(LP19,LP20,LP17),(LP19,LP20,LP29),(LP29,LP27,LP20),(LP29,LP27,LP31)]
+V4 = [(LP21,LP22,LP18),(LP21,LP22,LP28),(LP28,LP30,LP22),(LP28,LP30,LP32)]
+C1 = [(LP09,LP12)]
+C2 = [(LP23,LP26)]
+T1 = [(LP13,LP19,LP17)]
+T2 = [(LP14,LP20,LP17)]
+T3 = [(LP15,LP21,LP18)]
+T4 = [(LP16,LP22,LP18)]
 
 LCD_0 = H1+H3+V1+V2+V3+V4+T1+T2+T3+T4
 LCD_1 = V2+V4+T3+T4
@@ -182,7 +182,7 @@ LCD_7 = H1+V1+V2+V4+T3+T4
 LCD_8 = H1+H2+H3+V1+V2+V3+V4+T1+T4
 LCD_9 = H1+H2+H3+V1+V2+V4+T4
 LCD_COLON = C1+C2
-LCD_BG = PBG0+PBG1
+LCD_BG = LPBG0+LPBG1
 
 # for quick retrieval using target digit as index
 LCD_DIGITS = [LCD_0,LCD_1,LCD_2,LCD_3,LCD_4,LCD_5,LCD_6,LCD_7,LCD_8,LCD_9]
@@ -238,6 +238,94 @@ def epd_digits(x,y,digits,scale=LCD_MD):
     if count % 5 != 0:
         # so we don't refresh twice if we just did it by the last digit in the loop
         epd_update()
+
+
+# lightweight (in terms of drawing) and scalable block digits
+# in contrast to the nice LCD digits which require drawing many
+# triangles for each digit, these simple digits only require
+# up to 3 rectangles (6x coordinates) per digit
+# 
+# see ePaperDisplay/docs/block_digit_font_design.svg for reference
+# a 3x5 rectangle in FG colour is drawn and up to 2 areas are
+# 'subtracted' with BG colour to make a digit, e.g.
+#
+# ### ### ### ### ### # # ### ###  #  ###
+# # # # #   # #   #   # #   #   #  #  # #  #
+# ### ###   # ### ### ### ### ###  #  # #
+#   # # #   # # #   #   #   # #    #  # #  #
+# ### ###   # ### ###   # ### ###  #  ###
+
+BLOCK_DIGIT_UNIT = 10 # change this for scaling
+BLOCK_DIGIT_WIDTH = BLOCK_DIGIT_UNIT*3
+BLOCK_DIGIT_HEIGHT = BLOCK_DIGIT_UNIT*5
+BLOCK_DIGIT_SPACING = BLOCK_DIGIT_UNIT # space between 2 block digits
+
+BP01 = (0,0)
+BP02 = (BLOCK_DIGIT_UNIT,0)
+BP03 = (BLOCK_DIGIT_UNIT*2,0)
+BP04 = (0,BLOCK_DIGIT_UNIT)
+BP05 = (BLOCK_DIGIT_UNIT,BLOCK_DIGIT_UNIT)
+BP06 = (BLOCK_DIGIT_UNIT*2,BLOCK_DIGIT_UNIT*2)
+BP07 = (BLOCK_DIGIT_UNIT*3,BLOCK_DIGIT_UNIT*2)
+BP08 = (0,BLOCK_DIGIT_UNIT*3)
+BP09 = (BLOCK_DIGIT_UNIT,BLOCK_DIGIT_UNIT*3)
+BP10 = (BLOCK_DIGIT_UNIT*2,BLOCK_DIGIT_UNIT*4)
+BP11 = (BLOCK_DIGIT_UNIT*3,BLOCK_DIGIT_UNIT*4)
+BP12 = (BLOCK_DIGIT_UNIT,BLOCK_DIGIT_UNIT*5)
+BP13 = (BLOCK_DIGIT_UNIT*2,BLOCK_DIGIT_UNIT*5)
+BP14 = (BLOCK_DIGIT_UNIT*3,BLOCK_DIGIT_UNIT*5)
+
+BLK_0 = [(BP05,BP10)]
+BLK_1 = [(BP01,BP12),(BP03,BP14)]
+BLK_2 = [(BP04,BP06),(BP09,BP11)]
+BLK_3 = [(BP04,BP06),(BP08,BP10)]
+BLK_4 = [(BP02,BP06),(BP08,BP13)]
+BLK_5 = [(BP05,BP07),(BP08,BP11)]
+BLK_6 = [(BP02,BP07),(BP09,BP10)]
+BLK_7 = [(BP04,BP13)]
+BLK_8 = [(BP05,BP06),(BP09,BP10)]
+BLK_9 = [(BP05,BP06),(BP08,BP10)]
+BLK_COLON = BLK_8 # invert FG/BG colour
+BLK_BG = (BP01,BP14)
+
+# for quick retrieval using target digit as index
+BLK_DIGITS = [BLK_0,BLK_1,BLK_2,BLK_3,BLK_4,BLK_5,BLK_6,BLK_7,BLK_8,BLK_9]
+
+def block_digit(x,y,d,width=BLOCK_DIGIT_UNIT):
+    BLOCK_DIGIT_UNIT = width
+    (x0,y0),(x1,y1) = BLK_BG
+
+    if d == ':':
+        epd_set_color(WHITE,WHITE)
+        epd_fill_rect(x0,y0,x1,y1)
+        epd_set_color(BLACK,WHITE)
+        d = '8'
+    elif d in [str(s) for s in range(0,10)]:
+        epd_set_color(BLACK,WHITE)
+        epd_fill_rect(x0,y0,x1,y1)
+        epd_set_color(WHITE,WHITE)
+    else:
+        print "'%s' is not a digit or colon. Leaving it blank." % d
+        epd_set_color(WHITE,WHITE)
+        epd_fill_rect(x0,y0,x1,y1)
+        epd_set_color(BLACK,WHITE)
+        return
+
+    for rect in BLK_DIGITS[int(d)]:
+        (x0,y0),(x1,y1) = rect
+        epd_fill_rect(x0,y0,x1,y1)
+    epd_set_color(BLACK,WHITE)
+
+
+def epd_block_digits(x,y,digits,width=BLOCK_DIGIT_UNIT):
+    if digits=='':
+        return
+    count = 0
+    for d in digits:
+        block_digit(x+count*(BLOCK_DIGIT_WIDTH+BLOCK_DIGIT_SPACING), y, d, width)
+        count+=1
+    epd_update()
+
 
 # ASCII string to Hex string. e.g. "World" => "576F726C64"
 def A2H(string):
