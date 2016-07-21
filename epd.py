@@ -213,7 +213,7 @@ def lcd_digit(x,y,d,scale=LCD_MD):
     else:
         print "'%s' is not a digit or colon. Leaving it blank." % d
 
-def epd_digits(x,y,digits,scale=LCD_MD):
+def epd_lcd_digits(x,y,digits,scale=LCD_MD):
     if digits=='':
         return
     # for now, the input is expected to be a sequence of digits
@@ -709,9 +709,13 @@ epd_screen_invert()                     # flip EPD screen 180 degrees
 epd_clear()                             # clear display
 epd_update()                            # update screen with buffered commands
 
-epd_digits(x,y,"digits string",scale=LCD_SM|LCD_MD|LCD_LG)
+epd_lcd_digits(x,y,"digits string",scale=LCD_SM|LCD_MD|LCD_LG)
                                         # display digits including colon in LCD-digit font
                                         # scale can be any reasonable number
+epd_block_digits(x,y,"digits string",width=<int>)
+                                        # display 3 units x 5 units block digits including colon
+                                        # width should be an int indicating unit width
+                                        # default = 10 (pixels), meaning each digit is 30x50 pixels
 epd_ascii(x,y,"ascii string")           # display ascii string
 epd_chinese(x,y,"hex code of Chinese")  # display Chinese string
 
