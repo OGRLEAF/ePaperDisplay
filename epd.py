@@ -433,7 +433,7 @@ def epd_set_baud(baud_rate): # 1200, 2400, 4800, 9600, 19200, 38400, 57600, 1152
     if baud_rate in BAUD_RATES:
         BAUD_RATE = baud_rate
         hex_rate=('0000000'+hex(baud_rate)[2:])[-8:]
-        _cmd = FRAME_BEGIN+"000D"+CMD_SET_BAUD+hex_rate+FRAME_END;
+        _cmd = FRAME_BEGIN+"000D"+CMD_SET_BAUD+hex_rate+FRAME_END
         send(_cmd)
         epd_disconnect()
         sleep(10)
