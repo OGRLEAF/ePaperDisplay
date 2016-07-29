@@ -365,8 +365,8 @@ def send(cmd):
             print ">",soc.readline()
 
 
-def epd_connect():
-    global soc
+def epd_connect(rate=BAUD_RATE):
+    global soc, BAUD_RATE
     soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     soc.settimeout(1)
     for ip in [LAN, AP]:
@@ -382,10 +382,13 @@ def epd_connect():
             try:
                 soc = serial.Serial(
                     port=DEV,
-                    baudrate=BAUD_RATE,
+                    baudrate=rate,
                     timeout=1
                 )
                 print "> EPD connected via serial port"
+                if BAUD_RATE != rate:
+                    BAUD_RATE = rate
+                    print "> Client-side BAUD_RATE is now %d" % rate
                 return
             except:
                 print ">> Unable to connect to USB serial port", DEV
@@ -431,13 +434,15 @@ def epd_set_baud(baud_rate): # 1200, 2400, 4800, 9600, 19200, 38400, 57600, 1152
         print "> Do not change baud rate when using WiFi relay, or the WiFi module and the EPD will have different baud rates and stop understanding each other."
         return
     if baud_rate in BAUD_RATES:
-        BAUD_RATE = baud_rate
         hex_rate=('0000000'+hex(baud_rate)[2:])[-8:]
         _cmd = FRAME_BEGIN+"000D"+CMD_SET_BAUD+hex_rate+FRAME_END
         send(_cmd)
+        print "> Releasing current serial connection..."
         epd_disconnect()
-        sleep(10)
-        epd_connect()
+        print "> Waiting for the EPD to re-initiate with new baud rate..."
+        sleep(5)
+        print "> Reconnecting with baud rate %d ..." % baud_rate
+        epd_connect(rate=baud_rate)
     else:
         print "> Invalid baud rate. Pick from",BAUD_RATES
 
