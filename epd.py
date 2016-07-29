@@ -357,7 +357,9 @@ def H2B(hexStr):
 
 
 def send(cmd):
-    if type(soc) == socket._socketobject:
+    if soc == None:
+        print ">> EPD not connected. Try epd_connect()"
+    elif type(soc) == socket._socketobject:
         soc.send(H2B(cmd))
     else:
         soc.write(H2B(cmd))
