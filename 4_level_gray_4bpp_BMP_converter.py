@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
+import sys
+
 """
 
-### Sample BMP header structure, total = 70 bytes
-### !!! little-endian !!!
+Sample BMP header structure, total = 70 bytes
+!!! little-endian !!!
 
 Bitmap file header 14 bytes
 42 4D          "BM"
@@ -38,9 +40,6 @@ BMP_HEADER_SIZE = 70
 BPP = 4
 BYTE = 8
 ALIGNMENT = 4 # bytes per row
-
-import sys
-from re import findall
 
 DIMENTIONS = 1
 PIXELS = 3
