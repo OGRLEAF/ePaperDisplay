@@ -38,11 +38,19 @@ The baud rate should not be changed while connected via TCP/IP, as the WiFi modu
 The manufacture's manual isn't very clear about this. I consulted their technical support regarding how to remove the preloaded files, but the answer he gave some isn't the fact by my experiments. So here's my conclusion:
 
 * The 128MB internal storage is partitioned into 48MB for fonts and 80MB for images (according to the manual, unverified)
-* When calling the import functions (one for fonts and one for images), the relavant internal partition gets cleared and the fonts or images in the *root* directory of the SD card are copied over.
+* When calling the import functions (one for fonts and one for images), the relevant internal partition gets CLEARED and the fonts or images in the *root* directory of the SD card are copied over.
 * Valid fonts or images are determined by the file names:
   * `GBK32.FON`,`GBK48.FON` and `GBK64.FON` for fonts
-  * capital letters and digits followed by `.BMP` for images. Note that the totol length of file names must be no more than 10 chracters including `.BMP`.
-* If no valid font or image is found on SD card, the import functions will just clear the relavant internal storage.
+  * capital letters and digits followed by `.BMP` for images. Note that the total length of file names must be no more than 10 chracters including `.BMP`.
+* If no valid font or image is found on SD card, the import functions will just clear the relevant internal storage.
+```Python
+# Example: to import images
+# insert SD card
+> epd_set_memory_sd()
+> epd_import_pic()
+> epd_set_memory_nand()
+# remove SD card
+```
 
 ## Error Codes
 
