@@ -1,7 +1,6 @@
 import os
 import socket
 from time import sleep
-from platform import system
 
 VERBOSE = False
 LAN = "192.168.0.22" # EPD's home IP
@@ -9,14 +8,18 @@ AP = "192.168.1.1"   # EPD's own AP IP
 PORT = 3333
 MAC = "/dev/cu.usbserial"
 LINUX = "/dev/ttyUSB0"
-DEV = ""
+DEV = "" # insert your serial port here if known
 
-if system()=='Linux':
-    DEV = LINUX
-elif system()=='Darwin':
-    DEV = MAC
-else:
-    DEV = raw_input('Define serial port for EPD connection (e.g. /dev/ttyUSB1 or just hit enter for none): ')
+if DEV == "":
+    # try to auto-determine what serial port to use
+    # this is not guaranteed to work!
+    from platform import system
+    if system()=='Linux':
+        DEV = LINUX
+    elif system()=='Darwin':
+        DEV = MAC
+    else:
+        DEV = raw_input('Define serial port for EPD connection (e.g. /dev/ttyUSB1 or just hit enter for none): ')
 
 soc                 = None
 BAUD_RATE           = 115200
