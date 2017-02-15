@@ -3,12 +3,18 @@ import socket
 from time import sleep
 
 VERBOSE = False
+
+# these IP settings are for my own use with my TCP/IP-serial relay
 LAN = "192.168.0.22" # EPD's home IP
 AP = "192.168.1.1"   # EPD's own AP IP
 PORT = 3333
+
+# assumed serial interfaces for different platforms
 MAC = "/dev/cu.usbserial"
 LINUX = "/dev/ttyUSB0"
-DEV = "" # insert your serial port here if known
+
+# insert path to your serial port here if known. (DEV for device)
+DEV = ""
 
 if DEV == "":
     # try to auto-determine what serial port to use
