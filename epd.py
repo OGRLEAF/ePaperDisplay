@@ -341,7 +341,6 @@ def epd_block_digits(x,y,digits,scale=BLOCK_SM):
     for d in digits:
         block_digit(int(x+count*scale*(BLOCK_DIGIT_SPACING+BLOCK_DIGIT_WIDTH)), y, d, scale)
         count+=1
-    epd_update()
 
 
 # ASCII string to Hex string. e.g. "World" => "576F726C64"
