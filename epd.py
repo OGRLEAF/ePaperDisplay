@@ -1,6 +1,7 @@
 import os
 import socket
 from time import sleep
+import binascii
 
 VERBOSE = False
 
@@ -11,7 +12,7 @@ PORT = 3333
 
 # assumed serial interfaces for different platforms
 MAC = "/dev/cu.usbserial"
-LINUX = "/dev/ttyUSB0"
+LINUX = "/dev/ttyAMA0"
 
 # insert path to your serial port here if known. (DEV for device)
 DEV = ""
@@ -25,7 +26,7 @@ if DEV == "":
     elif system()=='Darwin':
         DEV = MAC
     else:
-        DEV = raw_input('Define serial port for EPD connection (e.g. /dev/ttyUSB1 or just hit enter for none): ')
+        DEV = input('Define serial port for EPD connection (e.g. /dev/ttyUSB1 or just hit enter for none): ')
 
 soc                 = None
 BAUD_RATE           = 115200
@@ -48,7 +49,7 @@ CMD_HANDSHAKE       = "00"  # handshake
 CMD_SET_BAUD        = "01"  # set baud
 CMD_READ_BAUD       = "02"  # read baud
 CMD_MEMORYMODE      = "07"  # set memory mode
-CMD_STOPMODE        = "08"  # enter stop mode 
+CMD_STOPMODE        = "08"  # enter stop mode
 CMD_UPDATE          = "0A"  # update
 CMD_SCREEN_ROTATION = "0D"  # set screen rotation
 CMD_LOAD_FONT       = "0E"  # copy font files from SD card to NandFlash.
@@ -79,7 +80,7 @@ CMD_DRAW_BITMAP     = "70"  # draw bitmap
 GBK32               = "01"
 GBK48               = "02"
 GBK64               = "03"
-    
+
 ASCII32             = "01"
 ASCII48             = "02"
 ASCII64             = "03"
@@ -92,7 +93,7 @@ MEM_SD              = "01"
 
 # set screen rotation
 EPD_NORMAL          = "00"     #screen normal
-EPD_INVERSION       = "01"     #screen inversion      
+EPD_INVERSION       = "01"     #screen inversion
 
 
 # command define
@@ -108,7 +109,7 @@ _cmd_use_sd      = FRAME_BEGIN+"000A"+CMD_MEMORYMODE+MEM_SD+FRAME_END
 
 
 # vector 7 segment LCD digits (calculator-like digits)
-# 
+#
 # 34 points that make up all the stokes
 # origin is top-left corner
 # see ePaperDisplay/docs/LCD_digit_font_design.svg for reference
@@ -160,7 +161,7 @@ LP34 = (100,220)
 #><---><         T1T2H2T3T4
 # | . |           V3 C2 V4
 #  ---               H3
-# 
+#
 # each horizontal/vertical stroke is drawn with 4 filled triangles
 # each dot of colon is a filled rectangle
 # each triangle filler beside H2 is a filled triangle
@@ -199,7 +200,7 @@ LCD_DIGITS = [LCD_0,LCD_1,LCD_2,LCD_3,LCD_4,LCD_5,LCD_6,LCD_7,LCD_8,LCD_9]
 # some default LCD digit sizes/scales
 LCD_SM = 0.33 # approx. 17 digits over entire width
 LCD_MD = 0.63 # approx. 9 digits over entire width
-LCD_LG = 1.15 # approx. 5 digits over entire width 
+LCD_LG = 1.15 # approx. 5 digits over entire width
 
 # NOTE:
 #   the EPD does not handle too many triangles at a time
@@ -220,7 +221,7 @@ def lcd_digit(x,y,d,scale=LCD_MD):
                               int(scale*x1+x),int(scale*y1+y),
                               int(scale*x2+x),int(scale*y2+y))
     else:
-        print "'%s' is not a digit or colon. Leaving it blank." % d
+        print("'%s' is not a digit or colon. Leaving it blank." % d)
 
 def epd_lcd_digits(x,y,digits,scale=LCD_MD):
     if digits=='':
@@ -253,7 +254,7 @@ def epd_lcd_digits(x,y,digits,scale=LCD_MD):
 # in contrast to the nice LCD digits which require drawing many
 # triangles for each digit, these simple digits only require
 # up to 3 rectangles (6x coordinates) per digit
-# 
+#
 # see ePaperDisplay/docs/block_digit_font_design.svg for reference
 # a 3x5 rectangle in FG colour is drawn and up to 2 areas are
 # 'subtracted' with BG colour to make a digit, e.g.
@@ -319,7 +320,7 @@ def block_digit(x,y,d,scale=BLOCK_SM):
                       int(scale*x1+x),int(scale*y1+y))
         epd_set_color(WHITE,WHITE)
     else:
-        print "'%s' is not a digit or colon. Leaving it blank." % d
+        print("'%s' is not a digit or colon. Leaving it blank." % d)
         return
 
     for rect in BLK_DIGITS[int(d)]:
@@ -350,29 +351,37 @@ def A2H(string):
         hex_str = hex_str+hex(ord(c))[-2:]
     return hex_str+"00" # append "00" to string as required
 
+def hex_line(hex_str):
+    k = hex(hex_str)[2:]
+    if len(k) < 2:
+        k = '0' + k
+    return k
 
+# 已修改为支持Python3
 # hex string to bytes with parity byte at the end
 def H2B(hexStr):
+    print(hexStr, 'hi')
     bytes = []
     parity = 0x00
     hexStr = hexStr.replace(" ",'')
     for i in range(0, len(hexStr), 2):
         byte = int(hexStr[i:i+2],16)
-        bytes.append(chr(byte))
+        bytes.append(byte)
         parity = parity ^ byte
-    bytes.append(chr(parity))
-    return ''.join(bytes)
-
+    bytes.append(parity)
+    print(bytes)
+    a = ''.join(map(hex_line, bytes))
+    return binascii.a2b_hex(a)
 
 def send(cmd):
     if soc == None:
-        print ">> EPD not connected. Try epd_connect()"
-    elif type(soc) == socket._socketobject:
+        print(">> EPD not connected. Try epd_connect()")
+    elif isinstance(soc, socket.socket):
         soc.send(H2B(cmd))
     else:
         soc.write(H2B(cmd))
         if VERBOSE:
-            print ">",soc.readline()
+            print(">",soc.readline())
 
 
 def epd_connect(rate=BAUD_RATE):
@@ -382,10 +391,10 @@ def epd_connect(rate=BAUD_RATE):
     for ip in [LAN, AP]:
         try:
             soc.connect((LAN, PORT))
-            print "> EPD connected at %s:%s" % (ip, PORT)
+            print("> EPD connected at %s:%s" % (ip, PORT))
             break
         except:
-            print ">> EPD not found at %s:%s" % (ip, PORT)
+            print(">> EPD not found at %s:%s" % (ip, PORT))
     else:
         if os.path.exists(DEV):
             import serial
@@ -395,15 +404,15 @@ def epd_connect(rate=BAUD_RATE):
                     baudrate=rate,
                     timeout=1
                 )
-                print "> EPD connected via serial port"
+                print("> EPD connected via serial port")
                 if BAUD_RATE != rate:
                     BAUD_RATE = rate
-                    print "> Client-side BAUD_RATE is now %d" % rate
+                    print("> Client-side BAUD_RATE is now %d" % rate)
                 return
             except:
-                print ">> Unable to connect to USB serial port", DEV
+                print(">> Unable to connect to USB serial port", DEV)
         else:
-            print ">> Serial port unavailable",DEV
+            print(">> Serial port unavailable",DEV)
 
 
 def epd_verbose(v):
@@ -415,14 +424,14 @@ def epd_verbose(v):
 
 
 def epd_handshake():
-    print "> EPD handshake"
+    print("> EPD handshake")
     send(_cmd_handshake)
 
 
 def epd_disconnect():
     global soc
     soc.close()
-    print "> EPD connection closed."
+    print("> EPD connection closed.")
 
 
 def epd_update():
@@ -441,24 +450,24 @@ def reset_baud_rate():
 def epd_set_baud(baud_rate): # 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200
     global BAUD_RATE
     if type(soc) == socket._socketobject:
-        print "> Do not change baud rate when using WiFi relay, or the WiFi module and the EPD will have different baud rates and stop understanding each other."
+        print("> Do not change baud rate when using WiFi relay, or the WiFi module and the EPD will have different baud rates and stop understanding each other.")
         return
     if baud_rate in BAUD_RATES:
         hex_rate=('0000000'+hex(baud_rate)[2:])[-8:]
         _cmd = FRAME_BEGIN+"000D"+CMD_SET_BAUD+hex_rate+FRAME_END
         send(_cmd)
-        print "> Releasing current serial connection..."
+        print("> Releasing current serial connection...")
         epd_disconnect()
-        print "> Waiting for the EPD to re-initiate with new baud rate..."
+        print("> Waiting for the EPD to re-initiate with new baud rate...")
         sleep(5)
-        print "> Reconnecting with baud rate %d ..." % baud_rate
+        print("> Reconnecting with baud rate %d ..." % baud_rate)
         epd_connect(rate=baud_rate)
     else:
-        print "> Invalid baud rate. Pick from",BAUD_RATES
+        print("> Invalid baud rate. Pick from",BAUD_RATES)
 
 
 def epd_read_baud():
-    print "> EPD baud rate:"
+    print("> EPD baud rate:")
     send(_cmd_read_baud)
 
 
@@ -470,7 +479,7 @@ def epd_set_memory_sd():
 
 
 def epd_halt():
-    print "> EPD halt"
+    print("> EPD halt")
     send(_cmd_stopmode)
 
 
@@ -554,7 +563,7 @@ def epd_circle(x0, y0, r):
 def epd_fill_circle(x0, y0, r):
     hex_x0 = ("000"+hex(x0)[2:])[-4:]
     hex_y0 = ("000"+hex(y0)[2:])[-4:]
-    hex_r = ("000"+hex(r)[2:])[-4:]   
+    hex_r = ("000"+hex(r)[2:])[-4:]
     _cmd = FRAME_BEGIN+"000F"+CMD_FILL_CIRCLE+hex_x0+hex_y0+hex_r+FRAME_END
     send(_cmd)
 
@@ -586,11 +595,11 @@ def epd_ascii(x0, y0, txt):
         hex_x0 = ("000"+hex(x0)[2:])[-4:]
         hex_y0 = ("000"+hex(y0)[2:])[-4:]
         hex_txt = A2H(txt)
-        hex_size = ("000"+hex(13+len(hex_txt)/2)[2:])[-4:]
+        hex_size = ("000"+hex(13+len(hex_txt)//2)[2:])[-4:]
         _cmd = FRAME_BEGIN+hex_size+CMD_DRAW_STRING+hex_x0+hex_y0+hex_txt+FRAME_END
         send(_cmd)
     else:
-        print "> Too many characters. Max length =",MAX_STRING_LEN
+        print("> Too many characters. Max length =",MAX_STRING_LEN)
 
 
 def epd_chinese(x0, y0, gb2312_hex): # "hello world" in Chinese: C4E3 BAC3 CAC0 BDE7
@@ -598,18 +607,18 @@ def epd_chinese(x0, y0, gb2312_hex): # "hello world" in Chinese: C4E3 BAC3 CAC0 
     if len(gb2312_hex)/2 <= MAX_STRING_LEN:
         hex_x0 = ("000"+hex(x0)[2:])[-4:]
         hex_y0 = ("000"+hex(y0)[2:])[-4:]
-        hex_size = ("000"+hex(13+len(gb2312_hex)/2)[2:])[-4:]
+        hex_size = ("000"+hex(13+len(gb2312_hex)//2)[2:])[-4:]
         _cmd = FRAME_BEGIN+hex_size+CMD_DRAW_STRING+hex_x0+hex_y0+gb2312_hex+FRAME_END
         send(_cmd)
     else:
-        print "> Too many characters. Max length =",MAX_STRING_LEN
+        print("> Too many characters. Max length =",MAX_STRING_LEN)
 
 
 def epd_bitmap(x0, y0, name): # file names must be all capitals and <10 letters including '.'
     hex_x0 = ("000"+hex(x0)[2:])[-4:]
     hex_y0 = ("000"+hex(y0)[2:])[-4:]
     hex_name = A2H(name)
-    hex_size = ("000"+hex(13+len(hex_name)/2)[2:])[-4:]
+    hex_size = ("000"+hex(13+len(hex_name)//2)[2:])[-4:]
     _cmd = FRAME_BEGIN+hex_size+CMD_DRAW_BITMAP+hex_x0+hex_y0+hex_name+FRAME_END
     send(_cmd)
 
@@ -619,7 +628,7 @@ def get_width(txt,size=32): # size in [32,48,64]
                             # widths are accurate. font size 48 and 64 are assumed
                             # widths based on simple calculation for rough estimates.
     if not size in [32, 48, 64]:
-        print "> Error: size must be in [32,48,64]"
+        print("> Error: size must be in [32,48,64]")
         return
     width = 0
     for c in txt:
@@ -706,7 +715,7 @@ def wrap_ascii(x,y,txt,limit=800,size=32): # does not work well with size 48 or 
 
 
 def help(): # list all available functions
-    print """\
+    print("""\
 epd_connect()                           # opens a connection to EPD (TCP/IP or USB serial)
 epd_handshake()                         # check if EPD is ready via serial connection
 epd_disconnect()                        # close serial connection to EPD
@@ -754,4 +763,4 @@ epd_triangle(x0,y0,x1,y1,x2,y2)         # draw a triangle
 epd_fill_triangle(x0,y0,x1,y1,x2,y2)    # draw a filled triangle
 
 epd_bitmap(x,y,"image file name")       # display image
-"""
+""")
